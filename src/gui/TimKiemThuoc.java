@@ -5,11 +5,14 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.ScrollPane;
+
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -21,13 +24,21 @@ import java.awt.Color;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
 
 public class TimKiemThuoc extends JFrame {
 
 	private JPanel contentPane;
 	private JComboBox cboLoaiThuoc;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtTenThuoc;
+	private JTextField txtMaThuoc;
+	private JButton btnLamMoi;
+	private JComboBox cboNhaCC;
+	private JButton btnTim;
+	private JTable tblDsThuoc;
+	private DefaultTableModel modelDsThuoc;
 
 	/**
 	 * Launch the application.
@@ -115,60 +126,80 @@ public class TimKiemThuoc extends JFrame {
 		lblTenThuoc.setPreferredSize(new Dimension(80, 14));
 		pnTenThuoc.add(lblTenThuoc);
 		
-		textField = new JTextField();
-		pnTenThuoc.add(textField);
-		textField.setColumns(22);
+		txtTenThuoc = new JTextField();
+		pnTenThuoc.add(txtTenThuoc);
+		txtTenThuoc.setColumns(22);
 		
 		JCheckBox chkTenThuoc = new JCheckBox("");
 		chkTenThuoc.setActionCommand("");
 		pnTenThuoc.add(chkTenThuoc);
 		
-		JPanel panel_1 = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) panel_1.getLayout();
-		flowLayout_3.setAlignment(FlowLayout.LEFT);
-		pnThongTin.add(panel_1);
+		JPanel pnMaThuoc = new JPanel();
+		FlowLayout fl_pnMaThuoc = (FlowLayout) pnMaThuoc.getLayout();
+		fl_pnMaThuoc.setAlignment(FlowLayout.LEFT);
+		pnThongTin.add(pnMaThuoc);
 		
 		JLabel lblMaThuoc = new JLabel("Mã thuốc");
 		lblMaThuoc.setPreferredSize(new Dimension(80, 14));
-		panel_1.add(lblMaThuoc);
+		pnMaThuoc.add(lblMaThuoc);
 		
-		textField_1 = new JTextField();
-		panel_1.add(textField_1);
-		textField_1.setColumns(22);
+		txtMaThuoc = new JTextField();
+		pnMaThuoc.add(txtMaThuoc);
+		txtMaThuoc.setColumns(22);
 		
 		JCheckBox chkMaThuoc = new JCheckBox("");
-		panel_1.add(chkMaThuoc);
+		pnMaThuoc.add(chkMaThuoc);
 		
-		JPanel pnLoaiThuoc_1 = new JPanel();
-		FlowLayout flowLayout_2 = (FlowLayout) pnLoaiThuoc_1.getLayout();
-		flowLayout_2.setAlignment(FlowLayout.LEFT);
-		pnThongTin.add(pnLoaiThuoc_1);
+		JPanel pnNhaCC = new JPanel();
+		FlowLayout fl_pnNhaCC = (FlowLayout) pnNhaCC.getLayout();
+		fl_pnNhaCC.setAlignment(FlowLayout.LEFT);
+		pnThongTin.add(pnNhaCC);
 		
 		JLabel lblNhaCungCap = new JLabel("Nhà cung cấp");
 		lblNhaCungCap.setPreferredSize(new Dimension(80, 14));
-		pnLoaiThuoc_1.add(lblNhaCungCap);
+		pnNhaCC.add(lblNhaCungCap);
 		
-		JComboBox cboLoaiThuoc_1 = new JComboBox();
-		cboLoaiThuoc_1.setPreferredSize(new Dimension(204, 22));
-		pnLoaiThuoc_1.add(cboLoaiThuoc_1);
+		cboNhaCC = new JComboBox();
+		cboNhaCC.setPreferredSize(new Dimension(204, 22));
+		pnNhaCC.add(cboNhaCC);
 		
-		JPanel panel = new JPanel();
-		pnThongTin.add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel pnChucNang = new JPanel();
+		pnThongTin.add(pnChucNang);
+		pnChucNang.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnTim = new JButton("Tìm");
+		btnTim = new JButton("Tìm");
 		btnTim.setBackground(Color.WHITE);
 		btnTim.setPreferredSize(new Dimension(74, 23));
-		panel.add(btnTim);
+		pnChucNang.add(btnTim);
 		
-		JButton btnLamMoi = new JButton("Làm mới");
+		btnLamMoi = new JButton("Làm mới");
 		btnLamMoi.setBackground(Color.WHITE);
-		btnLamMoi.setPreferredSize(new Dimension(83, 23));
-		panel.add(btnLamMoi);
+		btnLamMoi.setPreferredSize(new Dimension(100, 23));
+		pnChucNang.add(btnLamMoi);
 		
 		JPanel pnCenter = new JPanel();
-		pnCenter.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)));
+		pnCenter.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), 
+				new BevelBorder(BevelBorder.RAISED, null, null, null, null)));
 		contentPane.add(pnCenter, BorderLayout.CENTER);
+		pnCenter.setLayout(new BorderLayout(0, 0));
+		
+		JPanel pnCenterTop = new JPanel();
+		pnCenterTop.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pnCenter.add(pnCenterTop, BorderLayout.NORTH);
+		
+		JLabel lblKetQua = new JLabel("Kết quả tìm kiếm");
+		lblKetQua.setFont(new Font("Tahoma", Font.BOLD, 17));
+		pnCenterTop.add(lblKetQua);
+		
+		JPanel pnCenterMiddle = new JPanel();
+		pnCenter.add(pnCenterMiddle, BorderLayout.SOUTH);
+		
+		String[] cols = {"Mã thuốc","Tên thuốc","Loại","Ngày sản xuất","Hạn sử dụng","Đơn giá","số lượng"};
+		modelDsThuoc = new DefaultTableModel(cols,0);
+		tblDsThuoc = new JTable(modelDsThuoc);
+		JScrollPane scrtbl = new JScrollPane(tblDsThuoc, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		pnCenter.add(scrtbl, BorderLayout.CENTER);
 	}
 
 }
