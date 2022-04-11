@@ -45,6 +45,7 @@ public class DangNhap_gui extends JFrame {
 	private JCheckBox chcHienThiMatKhau;
 	public JCheckBox chkIsNhanVien;
 	public JButton btnThoat;
+	public ImageIcon icon;
 
 	/**
 	 * Launch the application.
@@ -71,8 +72,10 @@ public class DangNhap_gui extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setBounds(0, 0, 1300, 700);
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		setSize(screenSize.width, screenSize.height);
+		icon = new ImageIcon("data/images/snakelogo1.png");
+		setIconImage(icon.getImage());
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setSize(screenSize.width, screenSize.height);
 
 		contentPane = new JPanel() {  
 			public void paintComponent(Graphics g) {  
