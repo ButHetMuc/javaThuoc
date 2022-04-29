@@ -33,5 +33,9 @@ public class Thuoc_dao  {
 		return null;
 		
 	}
+	public boolean themThuoc(Thuoc th) {
+		Connection con = ConnectDB.getConnection();
+		String sql = "insert Thuoc values (?,?,?,?,?)"
+	}
 
 }
