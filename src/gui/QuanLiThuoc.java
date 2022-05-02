@@ -29,6 +29,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import entity.Thuoc;
+
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import javax.swing.Box;
@@ -308,7 +311,15 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 			txtTimKiem.setText("");
 		}
 		if(o.equals(btnThemMoi)) {
-			checkData();
+			if(checkData()) {
+				int maThuoc = Integer.parseInt(txtMaThuoc.getText().trim()) ;
+				String tenThuoc = txtTenThuoc.getText().trim();
+				String ngaySX = txtNgaySanXuat.getText().trim();
+				String hanSD = txtHanSuDung.getText().trim();
+				double donGia = Double.parseDouble(txtDonGia.getText().trim());
+				int soLuong = Integer.parseInt(txtSoLuong.getText().trim()) ;
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, null, ngaySX, ngaySX, hanSD, donGia, soLuong)
+			}
 		}
 		
 	}
