@@ -10,7 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-public class Admin extends JFrame {
+public class Application_gui extends JFrame {
 
 	private JPanel contentPane;
 	private JMenuBar menuBar;
@@ -43,7 +43,7 @@ public class Admin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Admin frame = new Admin();
+					Application_gui frame = new Application_gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,9 +55,10 @@ public class Admin extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Admin() {
+	public Application_gui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0,0, 1300, 700);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
