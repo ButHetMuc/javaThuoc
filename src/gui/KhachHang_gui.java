@@ -50,16 +50,16 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
-public class NhanVien_gui extends JFrame {
+public class KhachHang_gui extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel out;
 	private JTextField txtNhapLieu;
-	private JTable tblNhanVien;
+	private JTable tblKhachHang;
 	private JTextField txtMaKh,txtTenKh,txtSdt;
 	private DefaultTableModel model;
 	private List<NhanVien> dskh;  
-	private JButton btnSuaKh,btnLamMoi,btnTimKiem;
+	private JButton btnSuaKh,btnLamMoi,btnTimKiem,btnLayToanBoDuLieu;
 	private DefaultComboBoxModel cboLoaiTimKiem;
 	private JComboBox cmbLoaiTimKiem;
 	
@@ -71,7 +71,7 @@ public class NhanVien_gui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NhanVien_gui frame = new NhanVien_gui();
+					KhachHang_gui frame = new KhachHang_gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,8 +84,8 @@ public class NhanVien_gui extends JFrame {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public NhanVien_gui() throws SQLException {
-		setTitle("Nhân viên");
+	public KhachHang_gui() throws SQLException {
+		setTitle("Khách hàng");
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -98,7 +98,7 @@ public class NhanVien_gui extends JFrame {
 		
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel title = new JLabel("QUẢN LÝ NHÂN VIÊN");
+		JLabel title = new JLabel("QUẢN LÝ KHÁCH HÀNG");
 		title.setFont(new Font("Tahoma", Font.BOLD, 20));
 		top.add(title);
 		out.add(top);
@@ -128,7 +128,7 @@ public class NhanVien_gui extends JFrame {
 		JPanel pnTieuDe = new JPanel();
 		pnThongTinKh.add(pnTieuDe);
 		
-		JLabel lblTieuDe = new JLabel("Thông tin Nhân viên");
+		JLabel lblTieuDe = new JLabel("Thông tin Khách hàng");
 		lblTieuDe.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		pnTieuDe.add(lblTieuDe);
 		
@@ -140,7 +140,7 @@ public class NhanVien_gui extends JFrame {
 		fl_pnMaKh.setAlignment(FlowLayout.LEFT);
 		pnThongTinKh.add(pnMaKh);
 		
-		JLabel lblMaKh = new JLabel("Mã NV             ");
+		JLabel lblMaKh = new JLabel("Mã KH             ");
 		lblMaKh.setPreferredSize(new Dimension(100, 14));
 		pnMaKh.add(lblMaKh);
 		
@@ -155,7 +155,7 @@ public class NhanVien_gui extends JFrame {
 		fl_pnTenKh.setAlignment(FlowLayout.LEFT);
 		pnThongTinKh.add(pnTenKh);
 		
-		JLabel lblTenKh = new JLabel("Tên NV");
+		JLabel lblTenKh = new JLabel("Tên KH");
 		lblTenKh.setPreferredSize(new Dimension(100, 14));
 		pnTenKh.add(lblTenKh);
 		
@@ -218,7 +218,7 @@ public class NhanVien_gui extends JFrame {
 		cmbLoaiTimKiem.setBackground(Color.WHITE);
 		cmbLoaiTimKiem.setPreferredSize(new Dimension(130, 22));
 		pnTimKiem.add(cmbLoaiTimKiem);
-		cboLoaiTimKiem.addElement((String) "Tên NV");
+		cboLoaiTimKiem.addElement((String) "Tên KH");
 		cboLoaiTimKiem.addElement((String) "Số điện thoại");
 				
 		txtNhapLieu = new JTextField();
@@ -232,14 +232,21 @@ public class NhanVien_gui extends JFrame {
 		btnTimKiem.setIcon(new ImageIcon("data\\images\\search_16.png"));
 		pnTimKiem.add(btnTimKiem);
 		
+		btnLayToanBoDuLieu = new JButton("Lấy tất cả");
+		btnLayToanBoDuLieu.setPreferredSize(new Dimension(130, 25));
+		btnLayToanBoDuLieu.setBackground(Color.WHITE);
+		btnLayToanBoDuLieu.setIcon(new ImageIcon("data\\images\\search_16.png"));
+		pnTimKiem.add(btnLayToanBoDuLieu);
+		
+		
 		JPanel pnTableKh = new JPanel();
 		pnRight.add(pnTableKh, BorderLayout.CENTER);
 		pnTableKh.setLayout(new BorderLayout(0, 0));
 		
-		String[] cols_dskh = {"Mã nhân viên", "Tên nhân viên", "Số điện thoại", "Địa chỉ","Ca làm","chức vụ","Tài khoản"};
+		String[] cols_dskh = {"Mã Khách hàng", "Tên Khách hàng", "Số điện thoại"};
 		model = new DefaultTableModel(cols_dskh, 0);
-		tblNhanVien = new JTable(model);
-		JScrollPane scrTableNhanVien = new JScrollPane(tblNhanVien);
+		tblKhachHang = new JTable(model);
+		JScrollPane scrTableNhanVien = new JScrollPane(tblKhachHang);
 		scrTableNhanVien.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrTableNhanVien.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		pnTableKh.add(scrTableNhanVien);
@@ -259,11 +266,11 @@ public class NhanVien_gui extends JFrame {
 
 	private void addEvents() {
 		// TODO Auto-generated method stub
-		tblNhanVien.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		tblKhachHang.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				int idx = tblNhanVien.getSelectedRow();
+				int idx = tblKhachHang.getSelectedRow();
 				if(idx == -1 && txtTenKh.getText().equals("")) {
 					setDisable();
 				}
@@ -279,7 +286,7 @@ public class NhanVien_gui extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tblNhanVien.clearSelection();
+				tblKhachHang.clearSelection();
 				
 				int maNV = Integer.parseInt(txtMaKh.getText());
 				String tenNV = txtTenKh.getText();
