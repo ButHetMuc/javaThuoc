@@ -8,13 +8,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import connectdb.ConnectDBNV;
+import connectdb.ConnectDB;
 
 public class CaLam_dao {
     public List<CaLam> getAllCaLam() {
         List<CaLam> caLams = new ArrayList<>();
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+        Connection con = ConnectDB.getConnection();
         try {
             String sql = "Select * from calam";
             Statement statement = con.createStatement();
