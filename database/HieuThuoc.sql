@@ -1,6 +1,8 @@
 ﻿
 	create database HieuThuoc
 go
+
+
 	use HieuThuoc 
 go
 	create table NhanVien(
