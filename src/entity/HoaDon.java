@@ -1,5 +1,113 @@
 package entity;
 
-public class HoaDon {
+import java.sql.Date;
+import java.util.ArrayList;
 
+public class HoaDon {
+	
+	private int maHD;
+	private Date ngayLap;
+	private double tongTien;
+	
+	public NhanVien nhanVien;
+	public KhachHang khachHang;
+	public ArrayList<ChiTietHoaDon> chiTietHoaDons = new ArrayList<ChiTietHoaDon>();
+	
+	public HoaDon() {
+		super();
+	}
+
+	public HoaDon(int maHD) {
+		super();
+		this.maHD = maHD;
+	}
+
+	public HoaDon(int maHD, Date ngayLap, double tongTien, NhanVien nhanVien, KhachHang khachHang,
+			ArrayList<ChiTietHoaDon> chiTietHoaDons) {
+		super();
+		this.maHD = maHD;
+		this.ngayLap = ngayLap;
+		this.tongTien = tongTien;
+		this.nhanVien = nhanVien;
+		this.khachHang = khachHang;
+		this.chiTietHoaDons = chiTietHoaDons;
+	}
+
+	public int getMaHD() {
+		return maHD;
+	}
+
+	public void setMaHD(int maHD) {
+		this.maHD = maHD;
+	}
+
+	public Date getNgayLap() {
+		return ngayLap;
+	}
+
+	public void setNgayLap(Date ngayLap) {
+		this.ngayLap = ngayLap;
+	}
+
+	public double getTongTien() {
+		return tongTien;
+	}
+
+	public void setTongTien(double tongTien) {
+		this.tongTien = tongTien;
+	}
+
+	public NhanVien getNhanVien() {
+		return nhanVien;
+	}
+
+	public void setNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
+	}
+
+	public KhachHang getKhachHang() {
+		return khachHang;
+	}
+
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
+	}
+
+	public ArrayList<ChiTietHoaDon> getChiTietHoaDons() {
+		return chiTietHoaDons;
+	}
+
+	public void setChiTietHoaDons(ArrayList<ChiTietHoaDon> chiTietHoaDons) {
+		this.chiTietHoaDons = chiTietHoaDons;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + maHD;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HoaDon other = (HoaDon) obj;
+		if (maHD != other.maHD)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "HoaDon [maHD=" + maHD + ", ngayLap=" + ngayLap + ", tongTien=" + tongTien + ", nhanVien=" + nhanVien
+				+ ", khachHang=" + khachHang + ", chiTietHoaDons=" + chiTietHoaDons + "]";
+	}
+	
+	
 }

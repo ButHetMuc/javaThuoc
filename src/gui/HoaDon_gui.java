@@ -1,3 +1,4 @@
+
 package gui;
 
 import java.awt.*;
@@ -40,8 +41,8 @@ public class HoaDon_gui extends JFrame{
 	private JTextField txtDiaChi;
 	private JButton btnXoa;
 	private JComboBox cboTimKiem;
-	private DefaultTableModel modelDSSP;
-	private JTable tblDSSP;
+	private DefaultTableModel modelDSThuoc;
+	private JTable tblDSThuoc;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JLabel lblMaHD;
@@ -188,7 +189,7 @@ public class HoaDon_gui extends JFrame{
 		scHD.setBounds(10, 67, 875, 260);
 		panel_1.add(scHD);
 		String[] colsDSSP = { "Mã sản phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng", "Thành tiền" };
-		modelDSSP = new DefaultTableModel(colsDSSP, 0){
+		modelDSThuoc = new DefaultTableModel(colsDSSP, 0){
 			/**
 			 * 
 			 */
@@ -200,8 +201,8 @@ public class HoaDon_gui extends JFrame{
 				// Không cho chỉnh sửa trên table
 			}
 		};
-		tblDSSP = new JTable(modelDSSP);
-		JScrollPane scrollPane = new JScrollPane(tblDSSP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		tblDSThuoc = new JTable(modelDSThuoc);
+		JScrollPane scrollPane = new JScrollPane(tblDSThuoc,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setBounds(10, 330, 875, 235);
 		panel_1.add(scrollPane);
@@ -249,10 +250,10 @@ public class HoaDon_gui extends JFrame{
 	
 	public void clear() {
 		tableHD.clearSelection();
-		tblDSSP.clearSelection();
-		modelDSSP.getDataVector().removeAllElements();
-		tblDSSP.revalidate();
-		tblDSSP.repaint();
+		tblDSThuoc.clearSelection();
+		modelDSThuoc.getDataVector().removeAllElements();
+		tblDSThuoc.revalidate();
+		tblDSThuoc.repaint();
 		
 		txtMaHD.setText("");
 		txtMaKH.setText("");
