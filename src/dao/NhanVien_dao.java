@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import connectdb.ConnectDBNV;
+import connectdb.ConnectDB;
 import entity.CaLam;
 import entity.NhanVien;
 import entity.TaiKhoan;
@@ -22,8 +22,8 @@ import entity.TaiKhoan;
 public class NhanVien_dao {
     public ArrayList<NhanVien> getAllNhanVien() {
         ArrayList<NhanVien> dsnv = new ArrayList<NhanVien>();
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         try {
             String sql = "Select * from NhanVien";
             Statement statement = con.createStatement();
@@ -51,8 +51,8 @@ public class NhanVien_dao {
     }
 
     public boolean craete(NhanVien nv) {
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         PreparedStatement ps = null;
         int n = 0;
         try {
@@ -81,8 +81,8 @@ public class NhanVien_dao {
     }
 
     public boolean update(NhanVien nv) {
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         PreparedStatement ps = null;
         int n = 0;
         try {
@@ -116,8 +116,8 @@ public class NhanVien_dao {
 
     }
     public Boolean deleteNhanVienByID(String maNhanVien){
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         PreparedStatement ps = null;
         try {
             String sql = "DELETE FROM NhanVien WHERE maNhanVien=?";
@@ -139,8 +139,8 @@ public class NhanVien_dao {
     }
     public NhanVien findNhanVienById(String maNV){
         NhanVien nv = null;
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         PreparedStatement ps = null;
         try {
             String sql = "SELECT * from NhanVien WHERE maNhanVien=?";

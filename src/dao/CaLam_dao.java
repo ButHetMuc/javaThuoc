@@ -8,13 +8,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import connectdb.ConnectDBNV;
+import connectdb.ConnectDB;
 
 public class CaLam_dao {
     public List<CaLam> getAllCaLam() {
         List<CaLam> caLams = new ArrayList<>();
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         try {
             String sql = "Select * from CaLam";
             Statement statement = con.createStatement();
@@ -34,8 +34,8 @@ public class CaLam_dao {
     }
     public CaLam getCaLamById(int maCl) {
         CaLam caLam = new CaLam();
-        ConnectDBNV.getInstance();
-        Connection con = ConnectDBNV.getConnection();
+         
+        Connection con = ConnectDB.getConnection();
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement("Select * from calam where maCaLam =?");

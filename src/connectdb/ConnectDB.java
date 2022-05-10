@@ -10,7 +10,7 @@ public class ConnectDB {
 		String databaseName = "HieuThuoc";
 		String url = "jdbc:sqlserver://localhost:1433;databasename = "+databaseName;
 		String userName = "sa";
-		String password = "123456";
+		String password = "sa";
 		this.con = DriverManager.getConnection(url,userName,password);
 	}
 	public void disconnect() {

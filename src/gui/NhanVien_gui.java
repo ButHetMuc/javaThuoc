@@ -30,7 +30,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.JTextComponent;
 
-import connectdb.ConnectDBNV;
+import connectdb.ConnectDB;
 import dao.CaLam_dao;
 import dao.NhanVien_dao;
 import entity.CaLam;
@@ -90,7 +90,7 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 		// TODO Auto-generated constructor stub
 		// khởi tạo kết nối đến CSDL
 		try {
-			ConnectDBNV.getInstance().connect();
+			new ConnectDB();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -346,7 +346,7 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 	public void loadCombox() {
 		try {
 
-			Connection con = ConnectDBNV.getConnection();
+			Connection con = ConnectDB.getConnection();
 			//get all macalam from database
 			PreparedStatement ps = con.prepareStatement("Select macalam from calam");
 			ResultSet rs = ps.executeQuery();
