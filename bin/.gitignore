@@ -1,18 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/dao/
-=======
-/entity/
->>>>>>> linh
 /gui/
-/entity/
-/connectdb/
-/util/
-/demo.txt
-=======
-/gui/
-/util/
-/dao/
-/entity/
-/connectdb/
->>>>>>> hvcong-branch

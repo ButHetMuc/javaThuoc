@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -33,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -63,12 +65,10 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 
 	private JPanel contentPane;
 	private JPanel out;
-	private JTextField txtNhapLieu;
-	private JTable tblKhachHang;
-	private JTextField txtMaKh,txtSoNam,txtSdt;
-	private DefaultTableModel model;
+	private DefaultTableModel modelHD;
+	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Địa chỉ","Tổng tiền", "Ngày lập"};
 	private ArrayList<KhachHang> dskh;  
-	private JButton btnSuaKh,btnLayToanBoDuLieu,btnLuu;
+	private JButton btnThongKe;
 	
 	private DefaultComboBoxModel<String> modelLoaiThongKe;
 	private JComboBox<String> cbbLoaiThongKe;
@@ -82,8 +82,8 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 	private DefaultComboBoxModel<String> modelSoNgay;
 	private JComboBox<String> cbbSoNgay;
 	
-	private DefaultComboBoxModel<String> modelSoKi;
-	private JComboBox<String> cbbSoKi;
+	private DefaultComboBoxModel<String> modelSoQuy;
+	private JComboBox<String> cbbSoQuy;
 	
 	private KhachHang_dao kh_dao;
 	
@@ -131,7 +131,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel title = new JLabel("QUẢN LÝ KHÁCH HÀNG");
+		JLabel title = new JLabel("QUẢN LÝ DOANH THU");
 		title.setFont(new Font("Tahoma", Font.BOLD, 20));
 		top.add(title);
 		out.add(top);
@@ -145,10 +145,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		bottom.add(contentPane,BorderLayout.CENTER);
 		JPanel pnLeft = new JPanel();
-		Border compound = BorderFactory.createCompoundBorder(
-				BorderFactory.createBevelBorder(BevelBorder.RAISED),
-				BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		pnLeft.setBorder(compound);
+		pnLeft.setBorder(new TitledBorder("Lựa chọn thông số"));
 		contentPane.add(pnLeft);
 		
 		JPanel pnThongTinThongKe = new JPanel();
@@ -168,7 +165,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		
 		modelLoaiThongKe = new DefaultComboBoxModel<>();
 		modelLoaiThongKe.addElement("Năm");
-		modelLoaiThongKe.addElement("Kì");
+		modelLoaiThongKe.addElement("Quý");
 		modelLoaiThongKe.addElement("Tháng");
 		modelLoaiThongKe.addElement("Ngày");
 		
@@ -228,38 +225,28 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 				
 				modelSoNgay = new DefaultComboBoxModel<>();
 				modelSoNgay.addElement("1");
-				modelSoNgay.addElement("2");
-				modelSoNgay.addElement("3");
-				modelSoNgay.addElement("4");
-				modelSoNgay.addElement("5");
-				modelSoNgay.addElement("6");
-				modelSoNgay.addElement("7");
-				modelSoNgay.addElement("8");
-				modelSoNgay.addElement("9");
-				modelSoNgay.addElement("10");
-				modelSoNgay.addElement("11");
-				modelSoNgay.addElement("12");
+				renderCbbNgay();
 				
 				cbbSoNgay = new JComboBox<String>(modelSoNgay);
 				cbbSoNgay.setPreferredSize(new Dimension(100, 30) );
 				pnSoNgay.add(cbbSoNgay);
 				
 // theo ki
-				JPanel pnSoKi = new JPanel();
-				pnThongTinThongKe.add(pnSoKi);
-				JLabel lblSoKi = new JLabel("Kì: ");
-				lblSoKi.setPreferredSize(new Dimension(100, 14));
-				pnSoKi.add(lblSoKi);
+				JPanel pnSoQuy = new JPanel();
+				pnThongTinThongKe.add(pnSoQuy);
+				JLabel lblSoQuy = new JLabel("Quý: ");
+				lblSoQuy.setPreferredSize(new Dimension(100, 14));
+				pnSoQuy.add(lblSoQuy);
 				
-				modelSoKi = new DefaultComboBoxModel<>();
-				modelSoKi.addElement("I");
-				modelSoKi.addElement("II");
-				modelSoKi.addElement("III");
-				modelSoKi.addElement("IV");
+				modelSoQuy = new DefaultComboBoxModel<>();
+				modelSoQuy.addElement("I");
+				modelSoQuy.addElement("II");
+				modelSoQuy.addElement("III");
+				modelSoQuy.addElement("IV");
 				
-				cbbSoKi = new JComboBox<String>(modelSoKi);
-				cbbSoKi.setPreferredSize(new Dimension(100, 30) );
-				pnSoKi.add(cbbSoKi);
+				cbbSoQuy = new JComboBox<String>(modelSoQuy);
+				cbbSoQuy.setPreferredSize(new Dimension(100, 30) );
+				pnSoQuy.add(cbbSoQuy);
 
 		
 		Component verticalStrut = Box.createVerticalStrut(20);
@@ -269,42 +256,111 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		pnThongTinThongKe.add(pnChucNang);
 		pnChucNang.setLayout(new GridLayout(0, 1, 0, 5));
 		
-		btnSuaKh = new JButton("Sửa");
-		btnSuaKh.setBackground(Color.WHITE);
-		btnSuaKh.setIcon(new ImageIcon("data\\images\\repairing-service.png"));
-		btnSuaKh.setEnabled(false);
-//		btnSuaKh.setIconTextGap(30);
-		pnChucNang.add(btnSuaKh);
+		btnThongKe = new JButton("Thống kê doanh thu");
+		btnThongKe.setBackground(Color.WHITE);
+		btnThongKe.setIcon(new ImageIcon("data\\images\\repairing-service.png"));
+//		btnThongKe.setIconTextGap(30);
+		pnChucNang.add(btnThongKe);
 		
+// right side
 		
 		JPanel pnRight = new JPanel();
+		pnRight.setBorder(new TitledBorder("Kết quả thống kê"));
 		contentPane.add(pnRight);
-		pnRight.setLayout(new BorderLayout(0, 0));
-
-
+		pnRight.setLayout(new BorderLayout());
 		
+		JTable tableHD;
+		modelHD = new DefaultTableModel(colsHD, 0) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-		JPanel pnTableKh = new JPanel();
-		pnRight.add(pnTableKh, BorderLayout.CENTER);
-		pnTableKh.setLayout(new BorderLayout(0, 0));
+			@Override
+			public boolean isCellEditable(int i, int i1) {
+				return false;
+				// Không cho chỉnh sửa trên table
+			}
+		};
+
+		tableHD = new JTable(modelHD);
+		JScrollPane scHD = new JScrollPane(tableHD, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scHD.setBounds(10, 67, 875, 260);
+		pnRight.add(scHD,BorderLayout.CENTER);
+
+		JPanel pn_detail = new JPanel();
+		pn_detail.setLayout(new BoxLayout(pn_detail, BoxLayout.Y_AXIS));
+		pnRight.add(pn_detail,BorderLayout.SOUTH);
 		
-		String[] cols_dskh = {"Mã Khách hàng", "Tên Khách hàng", "Số điện thoại"};
-		model = new DefaultTableModel(cols_dskh, 0);
-		tblKhachHang = new JTable(model);
-		JScrollPane scrTableNhanVien = new JScrollPane(tblKhachHang);
-		scrTableNhanVien.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrTableNhanVien.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		pnTableKh.add(scrTableNhanVien);
+		JPanel pn_2 = new JPanel();
+		FlowLayout fl_2 = (FlowLayout) pn_2.getLayout();
+		fl_2.setAlignment(FlowLayout.LEFT);
+		pn_detail.add(pn_2);
+		JLabel lblSum = new JLabel("Tổng doanh thu: ");
+		JLabel lblSumValue = new JLabel("12.000.000 đồng");
+		pn_2.add(lblSum);
+		pn_2.add(lblSumValue);
+		
+		
+		JPanel pn_3 = new JPanel();
+		FlowLayout fl_3 = (FlowLayout) pn_3.getLayout();
+		fl_3.setAlignment(FlowLayout.LEFT);
+		pn_detail.add(pn_3);
+		JLabel lblMod = new JLabel("Thuốc bán nhiều nhất: ");
+		JLabel lblModeValue = new JLabel("Thuốc tiêu chảy VAD");
+		pn_3.add(lblMod);
+		pn_3.add(lblModeValue);
+		
+		
+		
+		cbbSoThang.setEnabled(false);
+		cbbSoQuy.setEnabled(false);
+		cbbSoNgay.setEnabled(false);
 
 		// add event
-//		cbbLoaiThongKe.addItemListener(this);
 		cbbLoaiThongKe.addActionListener(this);
+		cbbSoNam.addActionListener(this);
+		cbbSoThang.addActionListener(this);
 		// load data from database
 		loadAllData();
 		renderData();
 		
 	}
 	
+	private void renderCbbNgay() {
+		// TODO Auto-generated method stub
+		int nam = Integer.parseInt(cbbSoNam.getSelectedItem().toString());
+		int thang = Integer.parseInt(cbbSoThang.getSelectedItem().toString());
+		modelSoNgay.removeAllElements();
+		
+		if(nam % 4 == 0 && nam % 100 != 0 || nam % 400 == 0) {
+			// nam nhuan
+			if(thang == 2) {
+				for(int i = 1; i <=29 ; i++) {
+					modelSoNgay.addElement(i + "");
+				}
+			}
+		}else {
+			if(thang == 2) {
+				for(int i = 1; i <=28 ; i++) {
+					modelSoNgay.addElement(i + "");
+				}
+			}
+		}
+		
+		if(thang == 1 || thang == 3 || thang == 5 || thang == 7 || thang == 8 || thang == 10 || thang == 12) {
+			for(int i = 1; i <=31 ; i++) {
+				modelSoNgay.addElement(i + "");
+			}
+		}else if(thang != 2) {
+			for(int i = 1; i <=30 ; i++) {
+				modelSoNgay.addElement(i + "");
+			}
+		}
+		
+	}
+
 	private void loadAllData() {
 	}
 
@@ -331,21 +387,21 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		if(loaiThongKe.equals("Năm")) {
 			cbbSoNam.setEnabled(true);
 			cbbSoThang.setEnabled(false);
-			cbbSoKi.setEnabled(false);
+			cbbSoQuy.setEnabled(false);
 			cbbSoNgay.setEnabled(false);
 		}else if(loaiThongKe.equals("Tháng")) {
 			cbbSoNam.setEnabled(true);
 			cbbSoThang.setEnabled(true);
-			cbbSoKi.setEnabled(false);
+			cbbSoQuy.setEnabled(false);
 			cbbSoNgay.setEnabled(false);
 		}else if(loaiThongKe.equals("Ngày")) {
 			cbbSoNam.setEnabled(true);
 			cbbSoThang.setEnabled(true);
-			cbbSoKi.setEnabled(false);
+			cbbSoQuy.setEnabled(false);
 			cbbSoNgay.setEnabled(true);
-		}else if(loaiThongKe.equals("Kì")) {
+		}else if(loaiThongKe.equals("Quý")) {
 			cbbSoNam.setEnabled(true);
-			cbbSoKi.setEnabled(true);
+			cbbSoQuy.setEnabled(true);
 			cbbSoThang.setEnabled(false);
 			cbbSoNgay.setEnabled(false);
 			
@@ -358,6 +414,10 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		Object o = e.getSource();
 		if(o.equals(cbbLoaiThongKe)) {
 			renderLeftSide(cbbLoaiThongKe.getSelectedItem().toString());
+		}else if(o.equals(cbbSoNam)) {
+			renderCbbNgay();
+		}else if(o.equals(cbbSoThang)) {
+			renderCbbNgay();
 		}
 	
 		
