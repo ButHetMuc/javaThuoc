@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class NhanVien {
 	private int maNhanVien;
+
 	private TaiKhoan taiKhoan;
 	private CaLam caLam;
 	private String tenNhanVien;
@@ -45,6 +46,7 @@ public class NhanVien {
 		this.gioiTinh = gioiTinh;
 		this.luong = luong;
 	}
+
 
 
 	public NhanVien(int maNhanVien) {

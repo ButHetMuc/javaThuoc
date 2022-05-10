@@ -17,6 +17,7 @@ public class CaLam {
 	}
 	
 	public CaLam(int maCaLam) {
+
 		super();
 		this.maCaLam = maCaLam;
 	}
@@ -31,6 +32,7 @@ public class CaLam {
 	}
 
 	public void setMaCaLam(int maCaLam) {
+
 		this.maCaLam = maCaLam;
 	}
 
@@ -55,6 +57,7 @@ public class CaLam {
 	}
 
 	public void setThoiGianKetThuc(Time thoiGianKetThuc) {
+
 		this.thoiGianKetThuc = thoiGianKetThuc;
 	}
 
