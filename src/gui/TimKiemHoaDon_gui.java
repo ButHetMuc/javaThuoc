@@ -187,4 +187,7 @@ public class TimKiemHoaDon_gui extends JFrame {
 		// TODO Auto-generated method stub
 		
 	}
+	public JPanel getContentpan() {
+		return this.contentPane;
+	}
 }

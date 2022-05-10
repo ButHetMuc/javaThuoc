@@ -85,7 +85,7 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 		});
 	}
 
-	public NhanVien_gui() {
+	public NhanVien_gui() throws SQLException {
 		// TODO Auto-generated constructor stub
 		// khởi tạo kết nối đến CSDL
 		try {
@@ -617,5 +617,8 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 			}
 		});
 	}
-
+	
+//	public JPanel getContentpane() {
+//		return this.getContentpane();
+//	}
 }

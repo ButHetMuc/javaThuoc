@@ -2,15 +2,25 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
+import entity.TaiKhoan;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-public class Admin extends JFrame {
+public class Admin extends JFrame  {
 
 	private JPanel contentPane;
 	private JMenuBar menuBar;
@@ -22,7 +32,6 @@ public class Admin extends JFrame {
 	private JMenuItem mntmThongke;
 	private JMenu mnHoaDon;
 	private JMenuItem mntmQuanLiHD;
-	private JMenuItem mntmNewMenuItem;
 	private JMenuItem mntmTimKiemHD;
 	private JMenu mnKhachHang;
 	private JMenuItem mntmQuanLiKH;
@@ -30,11 +39,24 @@ public class Admin extends JFrame {
 	private JMenuItem mntmTimKH;
 	private JMenu mnNhanVien;
 	private JMenuItem mntmQuanLiNV;
-	private JMenuItem mntmThemNv;
-	private JMenuItem mntmTimKiemNV;
 	private JMenu mnTaiKhoan;
 	private JMenuItem mntmQuanLiTK;
 	private JMenuItem mntmThemTK;
+	
+	private DangNhap_gui dangNhapGui = new DangNhap_gui();
+	private DoanhThu_gui doanhThuGui = new DoanhThu_gui();
+	private HoaDon_gui hoaDonGui = new HoaDon_gui();
+	private KhachHang_gui khachHangGui = new KhachHang_gui();
+	private NhanVien_gui nhanVienGui = new NhanVien_gui();
+	private QuanLiThuoc quanLiThuocGui = new QuanLiThuoc();
+	private TaoHoaDon_gui taoHoaDonGui = new TaoHoaDon_gui();
+	private TimKiemHoaDon_gui timKiemHoaDonGui = new TimKiemHoaDon_gui();
+	private TimKiemThuoc timKiemThuocGui = new TimKiemThuoc();
+	private TrangChu_gui trangChuGui = new TrangChu_gui();
+	private JMenuItem mntmThemHoaDon;
+	private ImageIcon icon;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -55,16 +77,25 @@ public class Admin extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Admin() {
+	public Admin() throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0,0, 1300, 700);
+		icon = new ImageIcon("data/images/snakelogo1.png");
+		setIconImage(icon.getImage());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		renderMain(dangNhapGui.getContentPane(), "Trang chủ");
+		loginUser();
+//		appMenu();
 		
+		
+		
+	}
+	public void appMenu() {
 		menuBar = new JMenuBar();
-		contentPane.add(menuBar, BorderLayout.NORTH);
+		this.setJMenuBar(menuBar);
 		
 		mnTrangChu = new JMenu("Trang chủ");
 		menuBar.add(mnTrangChu);
@@ -75,11 +106,6 @@ public class Admin extends JFrame {
 		mntmQuanLiThuoc = new JMenuItem("Quản lí thuốc");
 		mnThuoc.add(mntmQuanLiThuoc);
 		
-		mntmTimThuoc = new JMenuItem("Tìm thuốc");
-		mnThuoc.add(mntmTimThuoc);
-		
-		mntmThemthuoc = new JMenuItem("Thêm thuốc");
-		mnThuoc.add(mntmThemthuoc);
 		
 		mntmThongke = new JMenuItem("Thống kê thuốc");
 		mnThuoc.add(mntmThongke);
@@ -90,8 +116,8 @@ public class Admin extends JFrame {
 		mntmQuanLiHD = new JMenuItem("Quản lí hóa đơn");
 		mnHoaDon.add(mntmQuanLiHD);
 		
-		mntmNewMenuItem = new JMenuItem("Thêm hóa đơn");
-		mnHoaDon.add(mntmNewMenuItem);
+		mntmThemHoaDon = new JMenuItem("Thêm hóa đơn");
+		mnHoaDon.add(mntmThemHoaDon);
 		
 		mntmTimKiemHD = new JMenuItem("Tìm kiếm hóa đơn");
 		mnHoaDon.add(mntmTimKiemHD);
@@ -101,33 +127,110 @@ public class Admin extends JFrame {
 		
 		mntmQuanLiKH = new JMenuItem("Quản lí Khách hàng");
 		mnKhachHang.add(mntmQuanLiKH);
-		
-		mntmThemKH = new JMenuItem("Thêm khách hàng");
-		mnKhachHang.add(mntmThemKH);
-		
-		mntmTimKH = new JMenuItem("Tìm kiếm khách hàng");
-		mnKhachHang.add(mntmTimKH);
-		
+				
 		mnNhanVien = new JMenu("Nhân viên");
 		menuBar.add(mnNhanVien);
 		
 		mntmQuanLiNV = new JMenuItem("Quản lí nhân viên");
 		mnNhanVien.add(mntmQuanLiNV);
 		
-		mntmThemNv = new JMenuItem("Thêm nhân viên");
-		mnNhanVien.add(mntmThemNv);
-		
-		mntmTimKiemNV = new JMenuItem("Tìm kiếm nhân viên");
-		mnNhanVien.add(mntmTimKiemNV);
-		
-		mnTaiKhoan = new JMenu("Khách hàng");
+		mnTaiKhoan = new JMenu("Tài khoản");
 		menuBar.add(mnTaiKhoan);
 		
 		mntmQuanLiTK = new JMenuItem("Quản lí tài khoản");
 		mnTaiKhoan.add(mntmQuanLiTK);
 		
-		mntmThemTK = new JMenuItem("Thêm tài khoản");
-		mnTaiKhoan.add(mntmThemTK);
+		mnTrangChu.addMenuListener(new MenuListener() {
+			
+			@Override
+			public void menuSelected(MenuEvent e) {
+				renderMain(trangChuGui.getContentpane(), "Trang chủ");
+				
+			}
+			
+			@Override
+			public void menuDeselected(MenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void menuCanceled(MenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		mntmQuanLiThuoc.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(quanLiThuocGui.getContentpane(),"quan li thuoc");
+			}
+		});
+		mntmQuanLiKH.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(khachHangGui.getContentPane(), "quan li khach hang");
+			}
+		});
+		mntmQuanLiNV.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain((JPanel)nhanVienGui.getContentPane(), "quan li nhan vien");
+			}
+		});
+		mntmQuanLiHD.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(hoaDonGui.getContentPane(), "quan li hoa don");
+			}
+		});
+		mntmThemHoaDon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(taoHoaDonGui.getContentpane(), "tao hoa don");
+			}
+		});
+		mntmTimKiemHD.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(timKiemHoaDonGui.getContentpan(), "tim kiem hoa don");
+			}
+		});
+		
 	}
+	
+	public void renderMain(JPanel contentPane, String tab) {
+		this.remove(this.contentPane);
+		this.revalidate();
+		this.repaint();
+		this.contentPane = contentPane;
+		this.setContentPane(contentPane);
+		this.revalidate();
+		this.repaint();
 
+
+	}
+	public void loginUser() {
+		dangNhapGui.btnDangNhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (dangNhapGui.checkPassword()) {					
+					renderMain(trangChuGui.getContentpane(), "chao mung");
+					appMenu();
+					menuBar.setVisible(true);
+					menuBar.revalidate();
+					menuBar.repaint();
+
+					dangNhapGui.clear();
+
+				} 
+			}
+		});
+
+	}
 }

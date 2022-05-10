@@ -116,14 +116,14 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//		kh_dao = new KhachHang_dao();	
+		kh_dao = new KhachHang_dao();	
 		
 		setTitle("Khách hàng");
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setBounds(0, 0, 1300, 700);
-		
+
 		out = new JPanel();
 		out.setLayout(new BoxLayout(out,BoxLayout.Y_AXIS));
 		setContentPane(out);
@@ -470,5 +470,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		// TODO Auto-generated method stub
 	
 	}
-
+	public JPanel getContenpain() {
+		return this.out;
+	}
 }

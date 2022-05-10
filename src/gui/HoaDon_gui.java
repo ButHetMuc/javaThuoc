@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
-public class HoaDon_gui extends JFrame{
+public class HoaDon_gui extends JFrame {
 	private DefaultTableModel modelHD;
 	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Địa chỉ","Tổng tiền", "Ngày lập"};
 	public JPanel pnMain;
@@ -239,10 +239,7 @@ public class HoaDon_gui extends JFrame{
 		btnLamMoi.setBounds(410, 29, 165, 25);
 		panel_1.add(btnLamMoi);
 
-	}
-		
-	
-		
+	}	
 
 	public JPanel getContentPane() {
 		return this.pnMain;

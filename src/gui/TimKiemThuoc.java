@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.ScrollPane;
+import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
@@ -59,7 +60,7 @@ public class TimKiemThuoc extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TimKiemThuoc() {
+	public TimKiemThuoc() throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1300, 700);
 		contentPane = new JPanel();
@@ -200,6 +201,10 @@ public class TimKiemThuoc extends JFrame {
 		JScrollPane scrtbl = new JScrollPane(tblDsThuoc, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		pnCenter.add(scrtbl, BorderLayout.CENTER);
+	}
+	
+	public JPanel getContentpane() {
+		return this.contentPane;
 	}
 
 }

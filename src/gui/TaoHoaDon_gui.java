@@ -308,6 +308,9 @@ public class TaoHoaDon_gui extends JFrame {
 		panel_3.add(scrollPane_1, BorderLayout.CENTER);
 		
 	}
+	public JPanel getContentpane() {
+		return this.contentPane;
+	}
 
 }
 

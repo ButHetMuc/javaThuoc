@@ -29,6 +29,7 @@ import javax.swing.JComboBox;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+import dao.TaiKhoan_dao;
 //import dao.TaiKhoanDAO;
 import util.Placeholder;
 
@@ -138,9 +139,9 @@ public class DangNhap_gui extends JFrame {
 		chcHienThiMatKhau.setBounds(309, 177, 130, 23);
 		panel.add(chcHienThiMatKhau);
 		
-		chkIsNhanVien = new JCheckBox("Admin");
-		chkIsNhanVien.setBounds(41, 177, 229, 23);
-		panel.add(chkIsNhanVien);
+//		chkIsNhanVien = new JCheckBox("Admin");
+//		chkIsNhanVien.setBounds(41, 177, 229, 23);
+//		panel.add(chkIsNhanVien);
 		
 		
 		
@@ -203,4 +204,16 @@ public class DangNhap_gui extends JFrame {
 	public void setTxtPassword(JPasswordField txtPassword) {
 		this.txtPassword = txtPassword;
 	}
+
+	public boolean checkPassword() {
+		TaiKhoan_dao taiKhoanDao = new TaiKhoan_dao();
+		String matKhau = taiKhoanDao.getMatKhau(txtUserName.getText());
+		if(txtPassword.getText().equals(matKhau))
+			return true;
+		else {
+			JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu", "Error", JOptionPane.WARNING_MESSAGE);
+		}
+		return false;
+	}
+
 }

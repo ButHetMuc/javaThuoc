@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
@@ -76,7 +77,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	/**
 	 * Create the frame.
 	 */
-	public QuanLiThuoc()  {
+	public QuanLiThuoc() throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1300, 700);
 		contentPane = new JPanel();
@@ -420,7 +421,9 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		return true;
 	}
 	
-
+	public JPanel getContentpane() {
+		return this.contentPane;
+	}
 	
 
 }
