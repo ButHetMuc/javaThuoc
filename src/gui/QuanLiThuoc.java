@@ -318,7 +318,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 				String hanSD = txtHanSuDung.getText().trim();
 				double donGia = Double.parseDouble(txtDonGia.getText().trim());
 				int soLuong = Integer.parseInt(txtSoLuong.getText().trim()) ;
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, null, ngaySX, ngaySX, hanSD, donGia, soLuong)
+//				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, null, ngaySX, ngaySX, hanSD, donGia, soLuong)
 			}
 		}
 		

@@ -81,7 +81,7 @@ public class TimKiemHoaDon_gui extends JFrame {
 		panel_2.add(panel_8);
 		
 		JLabel lblThongTinTimKiem = new JLabel("Thông tin tìm kiếm");
-		lblThongTinTimKiem.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblThongTinTimKiem.setFont(new Font("Tahoma", Font.BOLD, 17));
 		panel_8.add(lblThongTinTimKiem);
 		
 		JPanel panel_7 = new JPanel();
@@ -166,7 +166,7 @@ public class TimKiemHoaDon_gui extends JFrame {
 		panel_1.add(panel_3, BorderLayout.NORTH);
 		
 		JLabel lblTimKiem = new JLabel("Tìm kiếm hóa đơn");
-		lblTimKiem.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblTimKiem.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_3.add(lblTimKiem);
 		
 		JPanel panel_4 = new JPanel();
