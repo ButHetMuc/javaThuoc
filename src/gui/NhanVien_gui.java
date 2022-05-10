@@ -16,7 +16,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -98,7 +97,6 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 
 		nv_dao = new NhanVien_dao();
 		cl_dao = new CaLam_dao();
-
 		setTitle("Thông tin nhan vien");
 		setBounds(0, 0, 1300, 700);
 		setLocationRelativeTo(null);

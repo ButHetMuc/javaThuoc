@@ -1,16 +1,16 @@
-﻿set dateformat dMy
+set dateformat dMy
 
 --use master
 --go
 
---alter database HieuThuoc3 set single_user with rollback immediate
+--alter database HieuThuoc set single_user with rollback immediate
 --go
---drop database HieuThuoc3
+--drop database HieuThuoc
 
-create database HieuThuoc3
+create database HieuThuoc
 go
 
-use HieuThuoc3
+use HieuThuoc
 go
 
 	create table NhanVien(

@@ -116,7 +116,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		kh_dao = new KhachHang_dao();	
+//		kh_dao = new KhachHang_dao();	
 		
 		setTitle("Khách hàng");
 		setResizable(true);
