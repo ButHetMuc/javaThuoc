@@ -680,5 +680,4 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		}
 		
 	}
-
 }
