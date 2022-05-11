@@ -16,6 +16,8 @@ import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
@@ -31,6 +33,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import connectdb.ConnectDB;
+import dao.Thuoc_dao;
 import entity.Thuoc;
 
 import javax.swing.ImageIcon;
@@ -57,6 +61,8 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	private JButton btnLamMoi;
 	private JComboBox cboLoaiThuoc2;
 	private JButton btnTimThuoc;
+	private ArrayList<Thuoc> dsThuoc;
+	private Thuoc_dao thuocDao;
 
 	/**
 	 * Launch the application.
@@ -78,6 +84,8 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public QuanLiThuoc() throws SQLException {
+		new ConnectDB();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1300, 700);
 		contentPane = new JPanel();
@@ -144,6 +152,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		txtMaThuoc.setPreferredSize(new Dimension(7, 23));
 		pnMaThuoc.add(txtMaThuoc);
 		txtMaThuoc.setColumns(22);
+		txtMaThuoc.disable();
 		
 		JPanel pnTenThuoc = new JPanel();
 		FlowLayout fl_pnTenThuoc = (FlowLayout) pnTenThuoc.getLayout();
@@ -222,7 +231,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		
 		JPanel pnChucNang = new JPanel();
 		pnThongTin.add(pnChucNang);
-		pnChucNang.setLayout(new GridLayout(0, 2, 0, 0));
+		pnChucNang.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		pnChucNang.add(horizontalBox);
@@ -288,6 +297,8 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		
 		pnCenter.add(scrtbl, BorderLayout.CENTER);
 		
+		renderData();
+		
 		btnLamMoi.addActionListener(this);
 		btnThemMoi.addActionListener(this);
 		btnXoa.addActionListener(this);
@@ -295,6 +306,16 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		btnTimThuoc.addActionListener(this);
 		
 		
+	}
+
+	private void renderData() {
+		thuocDao = new Thuoc_dao();
+		dsThuoc = thuocDao.getDsThuoc();
+		
+		for(Thuoc th: dsThuoc) {
+			Object[] row = {th.getMaThuoc(),th.getTenThuoc(),th.getLoaiThuoc().getTenLoai(),th.getNgaySanXuat(),th.getNgayHetHan(),th.getDonGia(),th.getSoLuong()};
+			modelDsThuoc.addRow(row);
+		}
 	}
 
 	@Override
