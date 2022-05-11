@@ -6,8 +6,8 @@ public class LoaiThuoc {
 	private int maLoai;
 	private String tenLoai;
 
-	public LoaiThuoc(String ma) {
-		
+	public LoaiThuoc(int ma) {
+		this.maLoai = ma;
 	}
 
 	public LoaiThuoc(int maLoai, String tenLoai) {

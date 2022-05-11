@@ -15,11 +15,14 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Dimension;
@@ -34,15 +37,21 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import connectdb.ConnectDB;
+import dao.LoaiThuoc_dao;
+import dao.NhaCungCap_dao;
 import dao.Thuoc_dao;
+import entity.LoaiThuoc;
+import entity.NhaCungCap;
 import entity.Thuoc;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import javax.swing.Box;
 
-public class QuanLiThuoc extends JFrame implements ActionListener{
+public class QuanLiThuoc extends JFrame implements ActionListener,MouseListener{
 
+	
+	
 	private JPanel contentPane;
 	private JComboBox cboLoaiThuoc;
 	private JTextField txtMaThuoc;
@@ -59,10 +68,16 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	private JButton btnSua;
 	private JButton btnXoa;
 	private JButton btnLamMoi;
-	private JComboBox cboLoaiThuoc2;
 	private JButton btnTimThuoc;
-	private ArrayList<Thuoc> dsThuoc;
+	private ArrayList<Thuoc> dsThuocs;
+	private ArrayList<NhaCungCap> dsNhaCungCaps;
+	private ArrayList<LoaiThuoc> dsLoaiThuocs;
 	private Thuoc_dao thuocDao;
+	private NhaCungCap_dao nhaCungCapDao;
+	private LoaiThuoc_dao loaiThuocDao;
+	private DefaultComboBoxModel<String> modelCboLoaiThuoc;
+	private DefaultComboBoxModel<String> modelCboNhaCungCap;
+	private JComboBox cboTimTheo;
 
 	/**
 	 * Launch the application.
@@ -135,7 +150,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		lblLoaiThuoc.setPreferredSize(new Dimension(80, 14));
 		pnLoaiThuoc.add(lblLoaiThuoc);
 		
-		cboLoaiThuoc = new JComboBox();
+		addDataCboLoaiThuoc();
 		cboLoaiThuoc.setPreferredSize(new Dimension(204, 23));
 		pnLoaiThuoc.add(cboLoaiThuoc);
 		
@@ -148,7 +163,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		lblMaThuoc.setPreferredSize(new Dimension(80, 14));
 		pnMaThuoc.add(lblMaThuoc);
 		
-		txtMaThuoc = new JTextField();
+ 		txtMaThuoc = new JTextField();
 		txtMaThuoc.setPreferredSize(new Dimension(7, 23));
 		pnMaThuoc.add(txtMaThuoc);
 		txtMaThuoc.setColumns(22);
@@ -177,8 +192,9 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		lblNhaCungCap.setPreferredSize(new Dimension(80, 14));
 		pnNhaCC.add(lblNhaCungCap);
 		
-		cboNhaCC = new JComboBox();
+		addDataCboNhaCC();
 		cboNhaCC.setPreferredSize(new Dimension(204, 23));
+		
 		pnNhaCC.add(cboNhaCC);
 		
 		JPanel pnNgaySanXuat = new JPanel();
@@ -269,13 +285,10 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		pnCenterTop.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnCenter.add(pnCenterTop, BorderLayout.NORTH);
 		
-		JLabel lblttLoaiThuoc = new JLabel("Loại thuốc");
-		pnCenterTop.add(lblttLoaiThuoc);
-		
-	
-		cboLoaiThuoc2 = new JComboBox();
-		cboLoaiThuoc2.setPreferredSize(new Dimension(100, 23));
-		pnCenterTop.add(cboLoaiThuoc2);
+		String[] arrCachTim = {"Tên thuốc","Nhà cung cấp"};
+		cboTimTheo = new JComboBox<String>(arrCachTim);
+		cboTimTheo.setPreferredSize(new Dimension(120, 23));
+		pnCenterTop.add(cboTimTheo);
 		
 		txtTimKiem = new JTextField();
 		txtTimKiem.setPreferredSize(new Dimension(7, 23));
@@ -290,7 +303,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		JPanel pnCenterMiddle = new JPanel();
 		pnCenter.add(pnCenterMiddle, BorderLayout.SOUTH);
 		
-		String[] cols = {"Mã thuốc","Tên thuốc","Loại","Ngày sản xuất","Hạn sử dụng","Đơn giá","số lượng"};
+		String[] cols = {"Mã thuốc","Tên thuốc","Loại","Ngày sản xuất","Hạn sử dụng","Nhà cung cấp","Đơn giá","số lượng"};
 		modelDsThuoc = new DefaultTableModel(cols,0);
 		tblDsThuoc = new JTable(modelDsThuoc);
 		JScrollPane scrtbl = new JScrollPane(tblDsThuoc, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -298,22 +311,49 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 		pnCenter.add(scrtbl, BorderLayout.CENTER);
 		
 		renderData();
+		addDataCboLoaiThuoc();
 		
 		btnLamMoi.addActionListener(this);
 		btnThemMoi.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnTimThuoc.addActionListener(this);
+		tblDsThuoc.addMouseListener(this);
 		
 		
 	}
 
+	private void addDataCboNhaCC() {
+		nhaCungCapDao = new NhaCungCap_dao();
+		dsNhaCungCaps = new ArrayList<NhaCungCap>();
+		dsNhaCungCaps = nhaCungCapDao.getDsNhaCC();
+		
+		modelCboNhaCungCap = new DefaultComboBoxModel<String>();
+		for(NhaCungCap ncc: dsNhaCungCaps) {
+				modelCboNhaCungCap.addElement(ncc.getTenNhaCungCap());
+		}
+		cboNhaCC = new JComboBox<String>(modelCboNhaCungCap);
+	}
+
+	private void addDataCboLoaiThuoc() {
+		loaiThuocDao = new LoaiThuoc_dao();
+		dsLoaiThuocs = new ArrayList<LoaiThuoc>();
+		dsLoaiThuocs = loaiThuocDao.getDsLoaiThuoc();
+		modelCboLoaiThuoc = new DefaultComboBoxModel<String>();
+		for(LoaiThuoc lt :dsLoaiThuocs) {
+			modelCboLoaiThuoc.addElement(lt.getTenLoai());
+		}
+		cboLoaiThuoc = new JComboBox<String>(modelCboLoaiThuoc);
+	}
+
 	private void renderData() {
 		thuocDao = new Thuoc_dao();
-		dsThuoc = thuocDao.getDsThuoc();
+		dsThuocs = thuocDao.getDsThuoc();
 		
-		for(Thuoc th: dsThuoc) {
-			Object[] row = {th.getMaThuoc(),th.getTenThuoc(),th.getLoaiThuoc().getTenLoai(),th.getNgaySanXuat(),th.getNgayHetHan(),th.getDonGia(),th.getSoLuong()};
+		for(Thuoc th: dsThuocs) {
+			Object[] row = {th.getMaThuoc(),th.getTenThuoc(),th.getLoaiThuoc().getTenLoai(),
+					th.getNgaySanXuat(),th.getNgayHetHan(),th.getNhaCungCap().getTenNhaCungCap(),
+					th.getDonGia(),th.getSoLuong()};
 			modelDsThuoc.addRow(row);
 		}
 	}
@@ -322,8 +362,9 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if(o.equals(btnLamMoi)) {
-//			cboLoaiThuoc.setSelectedIndex(0);
-//			cboNhaCC.setSelectedIndex(0);
+			renderData();
+			cboLoaiThuoc.setSelectedIndex(0);
+			cboNhaCC.setSelectedIndex(0);
 			txtMaThuoc.setText("");
 			txtTenThuoc.setText("");
 			txtNgaySanXuat.setText("");
@@ -444,6 +485,45 @@ public class QuanLiThuoc extends JFrame implements ActionListener{
 	
 	public JPanel getContentpane() {
 		return this.contentPane;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int row = tblDsThuoc.getSelectedRow();
+	
+		txtMaThuoc.setText(modelDsThuoc.getValueAt(row, 0).toString());
+		txtTenThuoc.setText((String) modelDsThuoc.getValueAt(row, 1));
+		cboLoaiThuoc.setSelectedItem(modelDsThuoc.getValueAt(row, 2));
+		txtNgaySanXuat.setText((String) modelDsThuoc.getValueAt(row, 3));
+		txtHanSuDung.setText((String) modelDsThuoc.getValueAt(row, 4));
+		cboNhaCC.setSelectedItem(modelDsThuoc.getValueAt(row, 5));
+		txtDonGia.setText( modelDsThuoc.getValueAt(row, 6).toString());
+		txtSoLuong.setText( modelDsThuoc.getValueAt(row, 7).toString());
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

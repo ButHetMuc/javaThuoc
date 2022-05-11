@@ -41,14 +41,14 @@ public class Thuoc {
 	public Thuoc(ResultSet rs) throws NumberFormatException, SQLException {
 		super();
 		this.maThuoc = rs.getInt("maThuoc");
-		this.nhaCungCap = new NhaCungCap(rs.getString("maNhaCungCap")) ;
+		this.nhaCungCap = new NhaCungCap(rs.getInt("maNhaCungCap"),rs.getString("tenNhaCungCap"));
 		this.tenThuoc = rs.getString("tenThuoc");
-		this.loaiThuoc = new LoaiThuoc(rs.getString("maThuoc"));
+		this.loaiThuoc = new LoaiThuoc(rs.getInt("maLoaiThuoc"),rs.getString("tenLoai"));
 		this.ngaySanXuat = rs.getString("ngaySanXuat");
 		this.ngayHetHan = rs.getString("hanSuDung");
 		this.donViTinh = rs.getString("donViTinh");
 		this.donGia = rs.getDouble("donGia");
-		this.soLuong = rs.getInt("soLuong");
+		this.soLuong = rs.getInt("soLuonng");
 	}
 
 	public int getMaThuoc() {

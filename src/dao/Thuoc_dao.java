@@ -14,7 +14,9 @@ public class Thuoc_dao  {
 	public ArrayList<Thuoc> getDsThuoc(){
 		dst = new ArrayList<Thuoc>();
 		Connection con = ConnectDB.getConnection();
-		String sql = "select * from thuoc";
+		String sql = "select * from Thuoc a join NhaCungCap b on "
+				+ "a.maNhaCungCap = b.maNhaCungCap join LoaiThuoc c "
+				+ "on a.maLoaiThuoc = c.maLoaiThuoc";
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
