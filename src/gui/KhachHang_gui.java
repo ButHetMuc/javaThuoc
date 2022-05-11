@@ -338,6 +338,9 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 			}
 			
 		}else if(o.equals(btnLuu)) {
+			
+			if(!checkDataUpdate()) return;
+			
 			KhachHang kh = new KhachHang(Integer.parseInt(txtMaKh.getText()), txtTenKh.getText(), txtSdt.getText());
 			boolean isSuccess = kh_dao.update(kh);
 			if(isSuccess) {
@@ -356,6 +359,26 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 		}
 	}
 	
+	private boolean checkDataUpdate() {
+		// TODO Auto-generated method stub
+		String ten = txtTenKh.getText().trim();
+		String sdt = txtSdt.getText().trim();
+		
+		if(!ten.matches("([A-Z][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)((\\s{1}[A-Z][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)*)")) {
+			JOptionPane.showMessageDialog(null, "Tên khách hàng không hợp lệ!");
+			txtTenKh.selectAll();
+			txtTenKh.requestFocus();
+			return false;
+		}else if(!sdt.matches("0[1-9]{9}")) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
+			txtSdt.selectAll();
+			txtSdt.requestFocus();
+			return false;
+		}
+		
+		return true;
+	}
+
 	private void setEnabledEditForm(boolean is) {
 		txtTenKh.setEnabled(is);
 		txtSdt.setEnabled(is);
@@ -428,7 +451,6 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		Object o = e.getSource();
 		
 		String type = (String) cboLoaiTimKiem.getSelectedItem();
 		String value = txtNhapLieu.getText();

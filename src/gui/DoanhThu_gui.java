@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import connectdb.ConnectDB;
+import dao.DoanhThu_dao;
 import dao.KhachHang_dao;
 //import org.jdesktop.swingx.prompt.PromptSupport;
 //
@@ -44,9 +45,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
@@ -65,9 +69,8 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 
 	private JPanel contentPane;
 	private JPanel out;
-	private DefaultTableModel modelHD;
-	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Địa chỉ","Tổng tiền", "Ngày lập"};
-	private ArrayList<KhachHang> dskh;  
+	private DefaultTableModel model;
+	String[] colsHD = { "Mã thuốc", "Tên thuốc","Số lượng","Tổng tiền"};
 	private JButton btnThongKe;
 	
 	private DefaultComboBoxModel<String> modelLoaiThongKe;
@@ -86,6 +89,11 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 	private JComboBox<String> cbbSoQuy;
 	
 	private KhachHang_dao kh_dao;
+	private DoanhThu_dao dt_dao;
+	private JLabel lblMod;
+	private JLabel lblModeValue;
+	private JLabel lblSum;
+	private JLabel lblSumValue;
 	
 
 	/**
@@ -115,10 +123,10 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-		kh_dao = new KhachHang_dao();	
+				}	
+				dt_dao = new DoanhThu_dao();
 		
-		setTitle("Khách hàng");
+		setTitle("Doanh Thu");
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -225,7 +233,6 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 				
 				modelSoNgay = new DefaultComboBoxModel<>();
 				modelSoNgay.addElement("1");
-				renderCbbNgay();
 				
 				cbbSoNgay = new JComboBox<String>(modelSoNgay);
 				cbbSoNgay.setPreferredSize(new Dimension(100, 30) );
@@ -270,7 +277,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		pnRight.setLayout(new BorderLayout());
 		
 		JTable tableHD;
-		modelHD = new DefaultTableModel(colsHD, 0) {
+		model = new DefaultTableModel(colsHD, 0) {
 			/**
 			 * 
 			 */
@@ -283,7 +290,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 			}
 		};
 
-		tableHD = new JTable(modelHD);
+		tableHD = new JTable(model);
 		JScrollPane scHD = new JScrollPane(tableHD, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scHD.setBounds(10, 67, 875, 260);
@@ -297,8 +304,8 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		FlowLayout fl_2 = (FlowLayout) pn_2.getLayout();
 		fl_2.setAlignment(FlowLayout.LEFT);
 		pn_detail.add(pn_2);
-		JLabel lblSum = new JLabel("Tổng doanh thu: ");
-		JLabel lblSumValue = new JLabel("12.000.000 đồng");
+		lblSum = new JLabel("Tổng doanh thu: ");
+		lblSumValue = new JLabel("0 đồng");
 		pn_2.add(lblSum);
 		pn_2.add(lblSumValue);
 		
@@ -307,8 +314,8 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		FlowLayout fl_3 = (FlowLayout) pn_3.getLayout();
 		fl_3.setAlignment(FlowLayout.LEFT);
 		pn_detail.add(pn_3);
-		JLabel lblMod = new JLabel("Thuốc bán nhiều nhất: ");
-		JLabel lblModeValue = new JLabel("Thuốc tiêu chảy VAD");
+		lblMod = new JLabel("Thuốc bán nhiều nhất: ");
+		lblModeValue = new JLabel("");
 		pn_3.add(lblMod);
 		pn_3.add(lblModeValue);
 		
@@ -322,16 +329,25 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		cbbLoaiThongKe.addActionListener(this);
 		cbbSoNam.addActionListener(this);
 		cbbSoThang.addActionListener(this);
+		btnThongKe.addActionListener(this);
 		// load data from database
 		loadAllData();
-		renderData();
-		
+		renderCbbNgay();
 	}
 	
 	private void renderCbbNgay() {
 		// TODO Auto-generated method stub
-		int nam = Integer.parseInt(cbbSoNam.getSelectedItem().toString());
-		int thang = Integer.parseInt(cbbSoThang.getSelectedItem().toString());
+		int nam;
+		int thang;
+		
+		try {
+			nam = Integer.parseInt(cbbSoNam.getSelectedItem().toString());
+			thang = Integer.parseInt(cbbSoThang.getSelectedItem().toString());
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			return;
+		}
 		modelSoNgay.removeAllElements();
 		
 		if(nam % 4 == 0 && nam % 100 != 0 || nam % 400 == 0) {
@@ -362,10 +378,42 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 	}
 
 	private void loadAllData() {
+		int minYear = dt_dao.layNamCuNhat();
+		int maxYear = dt_dao.layNamMoiNhat();
+		modelSoNam.removeAllElements();
+		for(int i = minYear; i <= maxYear; i++) {
+			modelSoNam.addElement(i + "");		}
+		
 	}
 
-	private void renderData() {
+	private void renderData(ResultSet rs) {
 		// TODO Auto-generated method stub
+		if(Objects.isNull(rs)) {
+			JOptionPane.showMessageDialog(null,"Không có toa thuốc nào được bán trong thời gian này");
+			return;
+		}
+		double sum = 0;
+		
+		try {
+			model.setRowCount(0);
+			while(rs.next()) {
+				model.addRow(new Object[] {rs.getInt(1),rs.getString(2),rs.getInt(4),formatNumberForMoney(Math.round(rs.getDouble(3) ))});
+				sum += rs.getDouble(3);
+			}
+			
+		    lblSumValue.setText(formatNumberForMoney(sum));
+		    if(model.getRowCount() >= 1) {
+		    	lblModeValue.setText(model.getValueAt( model.getRowCount() -1, 1).toString());		    	
+		    }else {
+		    	lblSumValue.setText("0 đồng");
+		    	lblModeValue.setText("");
+		    	JOptionPane.showMessageDialog(null,"Không có toa thuốc nào được bán trong thời gian này");
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	
@@ -377,6 +425,14 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 				return true;
 		}
 		return false;
+	}
+	
+	private String formatNumberForMoney(double money) {
+		Locale localeVN = new Locale("vi", "VN");
+		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+	    String str1 = currencyVN.format(Math.round(money));
+	    str1 = str1.substring(0,str1.length() - 2);
+	    return str1 + " đồng";
 	}
 	
 	public JPanel getContentPane() {
@@ -418,6 +474,25 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 			renderCbbNgay();
 		}else if(o.equals(cbbSoThang)) {
 			renderCbbNgay();
+		}else if(o.equals(btnThongKe)) {
+			String loaiThongKe = cbbLoaiThongKe.getSelectedItem().toString();
+			int nam = Integer.parseInt(cbbSoNam.getSelectedItem().toString());
+			int thang = Integer.parseInt(cbbSoThang.getSelectedItem().toString());
+			int ngay = Integer.parseInt(cbbSoNgay.getSelectedItem().toString());
+			int quy = cbbSoQuy.getSelectedIndex() + 1;
+			
+			
+			if(loaiThongKe.equals("Năm")) {
+				renderData(dt_dao.layDoanhThuTheoNam(nam));
+			}else if(loaiThongKe.equals("Tháng")) {
+				renderData(dt_dao.layDoanhThuTheoThang(nam, thang));
+			}else if(loaiThongKe.equals("Ngày")) {
+				renderData(dt_dao.layDoanhThuTheoNgay(nam, thang, ngay));
+			}else if(loaiThongKe.equals("Quý")) {
+				
+				renderData(dt_dao.layDoanhThuTheoQuy(nam, quy));
+			}
+			
 		}
 	
 		

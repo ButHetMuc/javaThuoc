@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
@@ -20,7 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -36,7 +40,7 @@ import entity.CaLam;
 import entity.NhanVien;
 import entity.TaiKhoan;
 
-public class NhanVien_gui extends JFrame implements ActionListener {
+public class NhanVien_gui extends JFrame implements ActionListener, KeyListener {
 	private JTextField txtTen;
 	private JTextField txtCMND;
 	private JTextField txtSDT;
@@ -48,15 +52,10 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 	private JButton btnXoa;
 	private DefaultTableModel dataModel;
 	private JTable table;
-	private JButton btnTimKiem;
-	private JTextField lblTimKiem;
-	private JTextField txtTimKiem;
 	private JComboBox<String> cbCaLam;
-	private NhanVien_dao NhanVien;
 	private JLabel lblMauTin;
 	private int mauTinHienHanh;
 	private int tongSoMauTin;
-	private JCheckBox ckGioiTinh;
 	private JRadioButton radNam;
 	private JRadioButton radNu;
 	private JButton btnDau;
@@ -71,6 +70,11 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 	private JButton btnXemCTCL;
 	private JTextField txtTenTaiKhoan;
 	private JTextComponent txtMaNV;
+	
+
+	private DefaultComboBoxModel<String> cboLoaiTimKiem;
+	private JComboBox<String> cmbLoaiTimKiem;
+	private JTextField txtNhapLieu;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -235,9 +239,39 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 		pnNorth_New.add(lblMauTin = new JLabel());
 		pnNorth_New.add(btnSau = new JButton(new ImageIcon("data/images/go-next.png")));
 		pnNorth_New.add(btnCuoi = new JButton(new ImageIcon("data/images/go-last.png")));
-		pnNorth_New.add(txtTimKiem = new JTextField(20));
-		pnNorth_New.add(btnTimKiem = new JButton("Tìm kiếm"));
-		btnTimKiem.setBackground(Color.WHITE);
+		
+		JPanel pnTimKiem = new JPanel();
+		pnTimKiem.setBorder(new CompoundBorder(
+				new BevelBorder(BevelBorder.RAISED, null, null, null, null),
+				new BevelBorder(BevelBorder.LOWERED, null, null, null, null)));
+		pnNorth_New.add(pnTimKiem, BorderLayout.NORTH);
+
+		JLabel lblKieuTimKiem = new JLabel("Tìm kiếm theo:");
+		pnTimKiem.add(lblKieuTimKiem);
+		
+		cboLoaiTimKiem = new DefaultComboBoxModel<String>();
+		cmbLoaiTimKiem = new JComboBox<String>(cboLoaiTimKiem);
+		cmbLoaiTimKiem.setToolTipText("tìm kiếm theo");
+		cmbLoaiTimKiem.setBackground(Color.WHITE);
+		cmbLoaiTimKiem.setPreferredSize(new Dimension(130, 22));
+		pnTimKiem.add(cmbLoaiTimKiem);
+		cboLoaiTimKiem.addElement((String) "Mã NV");
+		cboLoaiTimKiem.addElement((String) "Tên NV");
+		cboLoaiTimKiem.addElement((String) "CMND");
+		cboLoaiTimKiem.addElement((String) "Số điện thoại");
+		cboLoaiTimKiem.addElement((String) "Địa chỉ");
+		
+		
+		JLabel lblTimKiem = new JLabel("Nhập giá trị tìm kiếm:");
+		lblTimKiem.setPreferredSize(new Dimension(130, 25));
+		pnTimKiem.add(lblTimKiem);
+				
+		txtNhapLieu = new JTextField();
+		txtNhapLieu.setPreferredSize(new Dimension(7, 25));
+		pnTimKiem.add(txtNhapLieu);
+		txtNhapLieu.setColumns(20);
+		
+		
 		pnCenter.add(pnNorth_New, BorderLayout.NORTH);
 
 		String[] headers = {"Mã nhân viên", "Tên tài khoản ", "Tên ca Làm","Tên nhân viên","CMND", 
@@ -302,14 +336,13 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 		btnSua.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnXemCTCL.addActionListener(this);
+		txtNhapLieu.addKeyListener(this);
 
 		moKhoaTextfields(false);
 		moKhoaGioiTinh(false);
 		btnLuu.setEnabled(false);
 		loadCombox();
 		napLopHocVaoTextfields();
-		//find NhanVien by manhanvien
-		serchEmployee();
 	}
 	private void showMessage(String message, JTextField txt) {
 		txt.requestFocus();
@@ -585,40 +618,67 @@ public class NhanVien_gui extends JFrame implements ActionListener {
 			
 		}
 	}
-	public void serchEmployee(){
-		TableRowSorter<TableModel> rowSorter
-		= new TableRowSorter<>(table.getModel()) ;
-		table.setRowSorter(rowSorter);
-		txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = txtTimKiem.getText();
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				String text = txtTimKiem.getText();
-
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				throw new UnsupportedOperationException("Chưa được hỗ trợ."); 
-			}
-		});
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		
+		String type = (String) cboLoaiTimKiem.getSelectedItem();
+		String value = txtNhapLieu.getText();
+		ArrayList<NhanVien> dsnv = new ArrayList<NhanVien>();
+		
+		if(type.equals("Mã NV")) {
+			dsnv = nv_dao.findListNV(value, "maNhanVien");
+		}else if(type.equals("Tên NV")) {
+			dsnv = nv_dao.findListNV(value,"tenNhanVien");
+		}else if(type.equals("CMND")) {
+			dsnv = nv_dao.findListNV(value,"CMND");
+		}else if(type.equals("Địa chỉ")) {
+			dsnv = nv_dao.findListNV(value,"diaChi");
+		}else if(type.equals("Số điện thoại")) {
+			dsnv = nv_dao.findListNV(value,"soDienThoai");
+		}
+		
+		renderData(dsnv);
+	}
+
 	
-//	public JPanel getContentpane() {
-//		return this.getContentpane();
-//	}
+	public JPanel getContentpane() {
+		return this.getContentpane();
+	}
+
+
+	private void renderData( ArrayList<NhanVien> dsnv) {
+		// TODO Auto-generated method stub
+		dataModel.setRowCount(0);
+		for (NhanVien nv : dsnv) {
+			Object[] rowData = {nv.getMaNhanVien(),
+					nv.getTaiKhoan().getTenTaiKhoan(),
+					nv.getCaLam().getMaCaLam(),
+					nv.getTenNhanVien(),
+					nv.getCMND(),
+					nv.getSoDienThoai(),
+					nv.getDiaChi(),
+					nv.getNgaySinh(),
+					nv.isGioiTinh(),
+					nv.getLuong(),
+			};
+			dataModel.addRow(rowData);
+		}
+		
+	}
+
 }
