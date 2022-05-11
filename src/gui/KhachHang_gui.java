@@ -428,7 +428,6 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		Object o = e.getSource();
 		
 		String type = (String) cboLoaiTimKiem.getSelectedItem();
 		String value = txtNhapLieu.getText();

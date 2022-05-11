@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 
 import connectdb.ConnectDB;
 import entity.CaLam;
+import entity.KhachHang;
 import entity.NhanVien;
 import entity.TaiKhoan;
 
@@ -169,4 +170,39 @@ public class NhanVien_dao {
         }
         return nv;
     }
+
+    public ArrayList<NhanVien> findListNV(String value, String type) {
+		ArrayList<NhanVien> list = new ArrayList<NhanVien>();
+		
+		Connection con = ConnectDB.getConnection();
+		try {
+			PreparedStatement ps = con.prepareStatement("Select * from nhanvien where " + type + " like ?");
+			ps.setString(1,"%" + value + "%");
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int maNhanVien = rs.getInt(1);
+                String tenTaiKhoan = rs.getString(2);
+                TaiKhoan tK = new TaiKhoan(tenTaiKhoan);
+                int maCaLam = rs.getInt(3);
+                CaLam caL = new CaLam(maCaLam);
+                String tenNhanVien = rs.getString(4);
+                String CMND = rs.getString(5);
+                String soDienThoai = rs.getString(6);
+                String diaChi = rs.getString(7);
+                Date ngaySinh = rs.getDate(8);
+                boolean gioiTinh = rs.getBoolean(9);
+                BigDecimal luong = rs.getBigDecimal(10);
+                NhanVien nv = new NhanVien(maNhanVien, tK, caL, tenNhanVien, CMND, soDienThoai, diaChi, ngaySinh, gioiTinh, luong);
+                list.add(nv);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return list;
+	}
 }
