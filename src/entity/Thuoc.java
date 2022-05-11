@@ -48,7 +48,32 @@ public class Thuoc {
 		this.ngayHetHan = rs.getString("hanSuDung");
 		this.donViTinh = rs.getString("donViTinh");
 		this.donGia = rs.getDouble("donGia");
-		this.soLuong = rs.getInt("soLuonng");
+		this.soLuong = rs.getInt("soLuong");
+	}
+
+	
+
+	public Thuoc(LoaiThuoc loaiThuoc, String tenThuoc, NhaCungCap nhaCungCap, String ngaySX, String hanSD,
+			double donGia, int soLuong) {
+		this.loaiThuoc = loaiThuoc;
+		this.tenThuoc = tenThuoc;
+		this.nhaCungCap = nhaCungCap;
+		this.ngaySanXuat = ngaySX;
+		this.ngayHetHan = hanSD;
+		this.donGia = donGia;
+		this.soLuong = soLuong;
+	}
+
+	public Thuoc(int maThuoc, LoaiThuoc loaiThuoc, String tenThuoc, NhaCungCap nhaCungCap, String ngaySX,
+			String hanSD, double donGia, int soLuong) {
+		this.maThuoc = maThuoc;
+		this.loaiThuoc = loaiThuoc;
+		this.tenThuoc = tenThuoc;
+		this.nhaCungCap = nhaCungCap;
+		this.ngaySanXuat = ngaySX;
+		this.ngayHetHan = hanSD;
+		this.donGia = donGia;
+		this.soLuong = soLuong;
 	}
 
 	public int getMaThuoc() {

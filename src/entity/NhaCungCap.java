@@ -22,6 +22,10 @@ public class NhaCungCap {
 		this.maNhaCungCap = maNhaCungCap;
 	}
 	
+	public NhaCungCap(String nhaCC) {
+		this.tenNhaCungCap = nhaCC;
+	}
+
 	public int getMaNhaCungCap() {
 		return maNhaCungCap;
 	}

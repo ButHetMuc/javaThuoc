@@ -15,7 +15,7 @@ go
 
 	create table NhanVien(
 		maNhanVien int IDENTITY not null ,
-		tenTaiKhoan varchar(30) not null,
+		tenTaiKhoan varchar(30) unique not null,
 		maCaLam int not null,
 		tenNhanVien nvarchar(30) not null,
 		CMND varchar(12) not null,
@@ -29,7 +29,7 @@ go
 		create table KhachHang(
 		maKhachHang int IDENTITY not null,
 		tenKhachHang nvarchar (30) not null,
-		soDienThoai nvarchar(10) not null,
+		soDienThoai varchar(10) not null,
 		diaChi nvarchar(100) null,
 		PRIMARY KEY (maKhachHang)
 		)
@@ -84,7 +84,7 @@ go
 		maThuoc  int IDENTITY not null ,
 		maNhaCungCap int not null ,
 		tenThuoc  nvarchar(30) not null,
-		soLuonng int not null,
+		soLuong int not null,
 		maLoaiThuoc  int not null,
 		ngaySanXuat date not null,
 		hanSuDung date not null,

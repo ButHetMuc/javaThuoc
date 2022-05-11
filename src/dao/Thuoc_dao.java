@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,9 +36,82 @@ public class Thuoc_dao  {
 		return null;
 		
 	}
-//	public boolean themThuoc(Thuoc th) {
-//		Connection con = ConnectDB.getConnection();
-//		String sql = "insert Thuoc values (?,?,?,?,?)";
-//	}
+
+	public boolean themThuoc(Thuoc th) {
+		Connection con = ConnectDB.getConnection();
+		String sql = "insert Thuoc values(?,?,?,?,?,?,?,?)";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, th.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(2, th.getTenThuoc());
+			stmt.setInt(3, th.getSoLuong());
+			stmt.setInt(4, th.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(5, th.getNgaySanXuat());
+			stmt.setString(6, th.getNgayHetHan());
+			stmt.setString(7, "");
+			stmt.setDouble(8, th.getDonGia());
+			
+			int n = stmt.executeUpdate();
+			if(n>0) {
+				return true;
+			}
+			else
+				return false;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean updateThuoc(Thuoc th) {
+		Connection con = ConnectDB.getConnection();
+		String sql = "update Thuoc set maNhaCungCap = ?, tenThuoc = ?, soLuong = ?,"
+				+ "maLoaiThuoc =?,ngaySanXuat=?,hanSuDung =?,donViTinh = ?,donGia =? where maThuoc = ?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, th.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(2, th.getTenThuoc());
+			stmt.setInt(3, th.getSoLuong());
+			stmt.setInt(4, th.getLoaiThuoc().getMaLoai());
+			stmt.setString(5, th.getNgaySanXuat());
+			stmt.setString(6, th.getNgayHetHan());
+			stmt.setString(7, "");
+			stmt.setDouble(8, th.getDonGia());
+			stmt.setInt(9, th.getMaThuoc());
+			
+			int n = stmt.executeUpdate();
+			if(n>0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean xoaThuoc(Thuoc th) {
+		Connection con = ConnectDB.getConnection();
+		String sql = "delete from Thuoc where maThuoc = ?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, th.getMaThuoc());
+		
+			int n = stmt.executeUpdate();
+			if(n>0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }

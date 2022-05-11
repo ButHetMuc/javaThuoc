@@ -20,6 +20,10 @@ public class LoaiThuoc {
 		super();
 	}
 
+	public LoaiThuoc(String loaiThuoc) {
+		this.tenLoai = loaiThuoc;
+	}
+
 	public int getMaLoai() {
 		return maLoai;
 	}
