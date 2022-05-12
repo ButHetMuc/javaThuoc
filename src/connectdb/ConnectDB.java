@@ -8,7 +8,7 @@ public class ConnectDB {
 		String databaseName = "HieuThuoc";
 		String url = "jdbc:sqlserver://localhost:1433;databasename = "+databaseName;
 		String userName = "sa";
-		String password = "sapassword";
+		String password ="123456";
 		this.con = DriverManager.getConnection(url,userName,password);
 	}
 	public void disconnect() {

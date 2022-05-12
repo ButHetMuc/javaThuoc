@@ -10,8 +10,12 @@ import java.util.ArrayList;
 import connectdb.ConnectDB;
 import entity.KhachHang;
 
-public class KhachHang_dao {
+public class KhachHang_dao extends ConnectDB{
 	
+	public KhachHang_dao() throws SQLException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	public ArrayList<KhachHang> getAll() {
 		ArrayList<KhachHang> list = new ArrayList<>();
 		
@@ -35,7 +39,31 @@ public class KhachHang_dao {
 		
 		return list;
 	}
-	
+	 public KhachHang getKhachHang(int maKH) {
+	        PreparedStatement stmt = null;
+	        try {
+
+	            String sql = "select * from KhachHang where MaKhachHang = ?";
+	            stmt = this.con.prepareStatement(sql);
+	            stmt.setInt(1, maKH);
+	            ResultSet rs = stmt.executeQuery();
+	            if(!rs.next())
+	            	return null;
+	            
+	            KhachHang kh = new KhachHang(rs);
+	            return kh;
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                stmt.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        return null;
+	    }
+	 
 	public boolean update(KhachHang kh) {
 		Connection con = ConnectDB.getConnection();
 		int n = 0;

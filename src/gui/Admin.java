@@ -192,17 +192,17 @@ public class Admin extends JFrame  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				renderMain(taoHoaDonGui.getContentpane(), "tao hoa don");
+				renderMain(taoHoaDonGui.getContentPane(), "tao hoa don");
 			}
 		});
 		mntmTimKiemHD.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					renderMain(timKiemHoaDonGui.getContentPane(), "tim hoa don");
+				}
+			});
 			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				renderMain(timKiemHoaDonGui.getContentpan(), "tim kiem hoa don");
-			}
-		});
-		
 	}
 	
 	public void renderMain(JPanel contentPane, String tab) {

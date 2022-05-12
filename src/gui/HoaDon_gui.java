@@ -1,20 +1,27 @@
-
 package gui;
 
 import java.awt.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import dao.HoaDon_dao;
+import gui.XuatHoaDon_gui;
+import entity.HoaDon;
+
 
 //import org.jdesktop.swingx.tree.DefaultXTreeCellEditor;
 //
@@ -27,9 +34,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
-public class HoaDon_gui extends JFrame {
+public class HoaDon_gui extends JFrame implements ActionListener{
 	private DefaultTableModel modelHD;
-	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Địa chỉ","Tổng tiền", "Ngày lập"};
+	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Tổng tiền", "Ngày lập"};
 	public JPanel pnMain;
 	private JTable tableHD;
 	private JPanel panel_1;
@@ -54,6 +61,8 @@ public class HoaDon_gui extends JFrame {
 	private JTextField txtTimKiem;
 	private boolean isTimKiem = false;
 	private JButton btnXuatHoaDon;
+	private ArrayList<HoaDon> dshd;
+	private JButton btnLamMoi;
 
 	public HoaDon_gui() throws SQLException {
 		
@@ -130,27 +139,18 @@ public class HoaDon_gui extends JFrame {
 		txtSdt.setBounds(122, 129, 205, 25);
 		pn.add(txtSdt);
 		
-		JLabel lblDiaChi = new JLabel("Địa chỉ:");
-		lblDiaChi.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblDiaChi.setBounds(10, 162, 93, 25);
-		pn.add(lblDiaChi);
-		txtDiaChi = new JTextField();
-		txtDiaChi.setEditable(false);
-		txtDiaChi.setColumns(10);
-		txtDiaChi.setBounds(122, 162, 205, 25);
-		pn.add(txtDiaChi);
-		
 		JLabel lblTongTien = new JLabel("Tổng tiền:");
 		lblTongTien.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTongTien.setBounds(10, 196, 93, 25);
+		lblTongTien.setBounds(10, 162, 93, 25);
 		pn.add(lblTongTien);
-
 		txtTongTien = new JTextField();
 		txtTongTien.setEditable(false);
-		txtTongTien.setBounds(122, 196, 205, 25);
-		pn.add(txtTongTien);
 		txtTongTien.setColumns(10);
+		txtTongTien.setBounds(122, 162, 205, 25);
+		pn.add(txtTongTien);
 		
+		
+
 		btnXoa = new JButton("Xóa");
 		btnXoa.setBounds(10, 247, 154, 35);
 		pn.add(btnXoa);
@@ -188,29 +188,7 @@ public class HoaDon_gui extends JFrame {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scHD.setBounds(10, 67, 875, 260);
 		panel_1.add(scHD);
-		String[] colsDSSP = { "Mã sản phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng", "Thành tiền" };
-		modelDSThuoc = new DefaultTableModel(colsDSSP, 0){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean isCellEditable(int i, int i1) {
-				return false;
-				// Không cho chỉnh sửa trên table
-			}
-		};
-		tblDSThuoc = new JTable(modelDSThuoc);
-		JScrollPane scrollPane = new JScrollPane(tblDSThuoc,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setBounds(10, 330, 875, 235);
-		panel_1.add(scrollPane);
-
-//		JLabel lbTimMaHDDV = new JLabel("Mã hoá đơn:");
-//		lbTimMaHDDV.setFont(new Font("Tahoma", Font.BOLD, 11));
-//		lbTimMaHDDV.setBounds(20, 25, 110, 30);
-//		panel_1.add(lbTimMaHDDV);
+		
 		
 		DefaultComboBoxModel<String> modelTimKiem = new DefaultComboBoxModel<String>();
 		cboTimKiem = new JComboBox(modelTimKiem);
@@ -234,12 +212,49 @@ public class HoaDon_gui extends JFrame {
 		panel_1.add(btnTimKiem);
 		
 		ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
-		JButton btnLamMoi = new JButton("Làm mới dữ liệu", icon_refresh);
+		btnLamMoi = new JButton("Làm mới dữ liệu", icon_refresh);
 		btnLamMoi.setBackground(Color.WHITE);
 		btnLamMoi.setBounds(410, 29, 165, 25);
 		panel_1.add(btnLamMoi);
+		
+		btnLamMoi.addActionListener(this);
+		btnTimKiem.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnXuatHoaDon.addActionListener(this);
+		
+		renderData();
+		
+		
+	}
+	private String formatNumberForMoney(double money) {
+		Locale localeVN = new Locale("vi", "VN");
+		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+	    String str1 = currencyVN.format(Math.round(money));
+	    str1 = str1.substring(0,str1.length() - 2);
+	    return str1 + " đồng";
+	}
+	
+	public void renderData() throws SQLException {
+		dshd = new HoaDon_dao().getDSHD();
+		
+		tableHD.clearSelection();
+		modelHD.getDataVector().removeAllElements();
+		dshd.forEach(hd -> {
+			modelHD.addRow(new Object[] {
+				hd.getMaHD(), 
+				hd.getKhachHang().getMaKhachHang(), 
+				hd.getKhachHang().getTenKhachHang(), 
+				hd.getKhachHang().getSoDienThoai(),
+				formatNumberForMoney(hd.getTongTien()),
+				hd.getNgayLap()
+			});
+		});
+		tableHD.revalidate();
+		tableHD.repaint();
+	}
 
-	}	
+
+
 
 	public JPanel getContentPane() {
 		return this.pnMain;
@@ -256,7 +271,6 @@ public class HoaDon_gui extends JFrame {
 		txtMaKH.setText("");
 		txtTenKH.setText("");
 		txtSdt.setText("");
-		txtDiaChi.setText("");
 		txtTongTien.setText("");
 		
 		
@@ -265,5 +279,113 @@ public class HoaDon_gui extends JFrame {
 	public static void main(String[] args) throws SQLException {
 		new HoaDon_gui().setVisible(true);
 	}
-
-}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if(o.equals(btnTimKiem)) {
+			try {
+				String key = "maHoaDon";
+				if(cboTimKiem.getSelectedIndex() == 1) {
+					key = "KhachHang.maKhachHang";
+				}else if(cboTimKiem.getSelectedIndex() == 2) {
+					key = "KhachHang.HoTen";
+				}else if(cboTimKiem.getSelectedIndex() == 3) {
+					key = "KhachHang.soDienThoai";
+				}
+				
+				dshd = (ArrayList<HoaDon>) new HoaDon_dao().timKiem(key, txtTimKiem.getText());
+				renderDataTimKiem();
+				isTimKiem = true;
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if(o.equals(btnXoa)) {
+			int idx = tableHD.getSelectedRow();
+			if(idx == -1) {
+				JOptionPane.showMessageDialog(pnMain, "Vui lòng chọn hóa đơn để xóa");
+				return;
+			}
+			int choose = JOptionPane.showConfirmDialog(pnMain, "Chắc chắn xóa ?");
+			if(choose == 0) {
+				try {
+					if(new HoaDon_dao().xoaHD(dshd.get(idx).getMaHD())) {
+						JOptionPane.showMessageDialog(pnMain, "Xóa thành công");
+						clear();
+						
+						if(isTimKiem) {
+							String key = "maHoaDon";
+							if(cboTimKiem.getSelectedIndex() == 1) {
+								key = "KhachHang.maKhachHang";
+							}else if(cboTimKiem.getSelectedIndex() == 2) {
+								key = "KhachHang.TenKhachHang";
+							}else if(cboTimKiem.getSelectedIndex() == 3) {
+								key = "KhachHang.soDienThoai";
+							}
+							
+							dshd = (ArrayList<HoaDon>) new HoaDon_dao().timKiem(key, txtTimKiem.getText());
+							renderDataTimKiem();
+						}else 
+							renderData();
+					}else {
+						JOptionPane.showMessageDialog(pnMain, "Xóa thất bại");
+					}
+				} catch (HeadlessException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		}
+		if(o.equals(btnLamMoi)) {
+			try {
+				isTimKiem  = false;
+				
+				clear();
+				
+				renderData();
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+		if(o.equals(btnXuatHoaDon)) {
+			int idx = tableHD.getSelectedRow();
+			if(idx == -1) {
+				JOptionPane.showMessageDialog(pnMain, "Vui lòng chọn hóa đơn để xuất");
+				return;
+			}
+			
+			XuatHoaDon_gui xuaHoaDonGUI = new XuatHoaDon_gui();
+			xuaHoaDonGUI.setHoaDon(dshd.get(idx));
+			xuaHoaDonGUI.setVisible(true);
+			xuaHoaDonGUI.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		}
+		}
+		
+	
+	private void renderDataTimKiem() {
+		// TODO Auto-generated method stub
+	tableHD.clearSelection();
+			
+			modelHD.getDataVector().removeAllElements();
+			
+			dshd.forEach(hd -> {
+				modelHD.addRow(new Object[] {
+						hd.getMaHD(), 
+						hd.getKhachHang().getMaKhachHang(), 
+						hd.getKhachHang().getTenKhachHang(), 
+						hd.getKhachHang().getSoDienThoai(),
+						formatNumberForMoney(hd.getTongTien()),
+						hd.getNgayLap()
+					});
+			});
+			
+			tableHD.revalidate();
+			tableHD.repaint();
+	}
+	}
