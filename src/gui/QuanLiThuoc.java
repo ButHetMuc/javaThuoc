@@ -15,6 +15,8 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -48,7 +50,7 @@ import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import javax.swing.Box;
 
-public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener {
+public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener,KeyListener {
 
 	private JPanel contentPane;
 	private JComboBox cboLoaiThuoc;
@@ -321,6 +323,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener
 		btnSua.addActionListener(this);
 		btnTimThuoc.addActionListener(this);
 		tblDsThuoc.addMouseListener(this);
+		txtTimKiem.addKeyListener(this);
 
 	}
 
@@ -603,6 +606,41 @@ public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	private void renderDataTimKiem() {
+		modelDsThuoc.setRowCount(0);
+		for (Thuoc th : dsThuocs) {
+			Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getLoaiThuoc().getTenLoai(), th.getNgaySanXuat(),
+					th.getNgayHetHan(), th.getNhaCungCap().getTenNhaCungCap(), th.getDonGia(), th.getSoLuong() };
+			modelDsThuoc.addRow(row);
+		}
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		String key = txtTimKiem.getText().trim();
+		String type = cboTimTheo.getSelectedItem().toString().trim();
+		dsThuocs = new ArrayList<Thuoc>();
+		if(type.equals("Tên thuốc")) {
+			dsThuocs = thuocDao.TimThuoc("tenThuoc",key);
+			renderDataTimKiem();
+		}else if(type.equals("Nhà cung cấp")) {
+			dsThuocs = thuocDao.TimThuoc("tenNhaCungCap",key);
+			renderDataTimKiem();
+		}
+		
 	}
 
 }

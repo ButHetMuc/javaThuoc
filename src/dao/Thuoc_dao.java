@@ -113,5 +113,27 @@ public class Thuoc_dao  {
 		}
 		return false;
 	}
+	
+	public ArrayList<Thuoc> TimThuoc(String column,String key){
+		dst = new ArrayList<Thuoc>();
+		Connection con = ConnectDB.getConnection();
+		String sql = "select * from Thuoc a join NhaCungCap b on "
+				+ "a.maNhaCungCap = b.maNhaCungCap join LoaiThuoc c"
+				+ " on a.maLoaiThuoc = c.maLoaiThuoc  where "+column+ " like "+"'%"+key+"%'";
+		System.out.println(sql);
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				Thuoc th = new Thuoc(rs);
+				dst.add(th);
+			}
+			return dst;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
