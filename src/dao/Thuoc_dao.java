@@ -120,7 +120,6 @@ public class Thuoc_dao  {
 		String sql = "select * from Thuoc a join NhaCungCap b on "
 				+ "a.maNhaCungCap = b.maNhaCungCap join LoaiThuoc c"
 				+ " on a.maLoaiThuoc = c.maLoaiThuoc  where "+column+ " like "+"'%"+key+"%'";
-		System.out.println(sql);
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);

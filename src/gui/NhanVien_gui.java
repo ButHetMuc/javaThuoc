@@ -39,6 +39,7 @@ import dao.NhanVien_dao;
 import entity.CaLam;
 import entity.NhanVien;
 import entity.TaiKhoan;
+import java.awt.FlowLayout;
 
 public class NhanVien_gui extends JFrame implements ActionListener, KeyListener {
 	private JTextField txtTen;
@@ -112,10 +113,10 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		pnQLNV.add(lblQLNV = new JLabel("QUẢN LÝ NHÂN VIÊN", JLabel.CENTER));
 		lblQLNV.setFont(new Font("Arial", Font.BOLD, 26));
 		pnNorth.add(pnQLNV);
-		add(pnNorth, BorderLayout.NORTH);
+		getContentPane().add(pnNorth, BorderLayout.NORTH);
 
 		JPanel pnWest = new JPanel(new GridLayout(16, 0));
-		add(pnWest, BorderLayout.WEST);
+		getContentPane().add(pnWest, BorderLayout.WEST);
 
 		JPanel pnTieuDe = new JPanel();
 		JLabel lblTieuDe;
@@ -128,51 +129,73 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		txtMaNV = new JTextField(11);
 
 		JPanel pnTaiKhoan = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) pnTaiKhoan.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
 		JLabel lblTenTaiKhoan;
 		pnTaiKhoan.add(lblTenTaiKhoan = new JLabel("Tên tài khoản"));
-		pnTaiKhoan.add(txtTenTaiKhoan = new JTextField(11));
+		pnTaiKhoan.add(txtTenTaiKhoan = new JTextField(20));
+		txtTenTaiKhoan.setPreferredSize(new Dimension(200, 23));
 		pnWest.add(pnTaiKhoan);
 
 		JPanel pnCaLam = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) pnCaLam.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		JLabel lblCalam;
 		pnCaLam.add(lblCalam = new JLabel("Ca làm"));
 		pnCaLam.add(cbCaLam = new JComboBox<String>());
-		cbCaLam.setPreferredSize(new Dimension(114, 20));
+		cbCaLam.setPreferredSize(new Dimension(185, 23));
 		pnWest.add(pnCaLam);
 
 		JPanel pnTen = new JPanel();
+		FlowLayout flowLayout_2 = (FlowLayout) pnTen.getLayout();
+		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		JLabel lblTen;
 		pnTen.add(lblTen = new JLabel("Tên nhân viên"));
-		pnTen.add(txtTen = new JTextField(11));
+		pnTen.add(txtTen = new JTextField(20));
+		txtTen.setPreferredSize(new Dimension(166, 23));
 		pnWest.add(pnTen);
 
 		JPanel pnCMND = new JPanel();
+		FlowLayout flowLayout_3 = (FlowLayout) pnCMND.getLayout();
+		flowLayout_3.setAlignment(FlowLayout.LEFT);
 		JLabel lblCMND;
 		pnCMND.add(lblCMND = new JLabel("CMND"));
-		pnCMND.add(txtCMND = new JTextField(11));
+		pnCMND.add(txtCMND = new JTextField(20));
+		txtCMND.setPreferredSize(new Dimension(166, 23));
 		pnWest.add(pnCMND);
 
 		JPanel pnSDT = new JPanel();
+		FlowLayout flowLayout_4 = (FlowLayout) pnSDT.getLayout();
+		flowLayout_4.setAlignment(FlowLayout.LEFT);
 		JLabel lblSDT;
 		pnSDT.add(lblSDT = new JLabel("Số điên thoại"));
-		pnSDT.add(txtSDT = new JTextField(11));
+		pnSDT.add(txtSDT = new JTextField(20));
+		txtSDT.setPreferredSize(new Dimension(166, 23));
 		pnWest.add(pnSDT);
 
 		JPanel pnDiaChi = new JPanel();
+		FlowLayout flowLayout_5 = (FlowLayout) pnDiaChi.getLayout();
+		flowLayout_5.setAlignment(FlowLayout.LEFT);
 		JLabel lblDiaChi;
 		pnDiaChi.add(lblDiaChi = new JLabel("Địa chỉ"));
-		pnDiaChi.add(txtDiaChi = new JTextField(11));
+		pnDiaChi.add(txtDiaChi = new JTextField(20));
+		txtDiaChi.setPreferredSize(new Dimension(166, 23));
 		pnWest.add(pnDiaChi);
 
 
 
 		JPanel pnNgaySinh = new JPanel();
+		FlowLayout flowLayout_6 = (FlowLayout) pnNgaySinh.getLayout();
+		flowLayout_6.setAlignment(FlowLayout.LEFT);
 		JLabel lblNgaySinh;
 		pnNgaySinh.add(lblNgaySinh = new JLabel("Ngày sinh"));
-		pnNgaySinh.add(txtNgaySinh = new JTextField(11));
+		pnNgaySinh.add(txtNgaySinh = new JTextField(20));
+		txtNgaySinh.setPreferredSize(new Dimension(166, 23));
 		pnWest.add(pnNgaySinh);
 
 		JPanel pnGioiTinh = new JPanel();
+		FlowLayout flowLayout_7 = (FlowLayout) pnGioiTinh.getLayout();
+		flowLayout_7.setAlignment(FlowLayout.LEFT);
 		JLabel lblGioiTinh;
 		pnGioiTinh.add(lblGioiTinh = new JLabel("Giới tính"));
 		pnGioiTinh.add(radNam = new JRadioButton("Nam"));
@@ -184,9 +207,12 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		groupGT.add(radNu);
 
 		JPanel pnTienLuong = new JPanel();
+		FlowLayout flowLayout_8 = (FlowLayout) pnTienLuong.getLayout();
+		flowLayout_8.setAlignment(FlowLayout.LEFT);
 		JLabel lblTienLuong;
 		pnTienLuong.add(lblTienLuong = new JLabel("TienLuong"));
-		pnTienLuong.add(txtTienLuong = new JTextField(11));
+		pnTienLuong.add(txtTienLuong = new JTextField(20));
+		txtTienLuong.setPreferredSize(new Dimension(94, 23));
 		pnWest.add(pnTienLuong);
 
 
@@ -198,19 +224,23 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 
 		JPanel pnThem = new JPanel();
 		pnThem.add(btnThem = new JButton("Thêm"));
+		btnThem.setBackground(Color.WHITE);
 		pnWest.add(pnThem);
 
 		JPanel pnLuu = new JPanel();
+		pnLuu.setBackground(Color.WHITE);
 		pnLuu.add(btnLuu = new JButton("Lưu"));
 		pnWest.add(pnLuu);
 
 		JPanel pnXoa = new JPanel();
 		pnXoa.add(btnXoa = new JButton("Xóa"));
+		btnXoa.setBackground(Color.WHITE);
 		pnWest.add(pnXoa);
 
 
 		JPanel pnSua = new JPanel();
 		pnSua.add(btnSua = new JButton("Sửa"));
+		btnSua.setBackground(Color.WHITE);
 		pnWest.add(pnSua);
 
 		btnThem.setPreferredSize(new Dimension(246, 24));
@@ -235,10 +265,14 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		JPanel pnNorth_New = new JPanel();
 
 		pnNorth_New.add(btnDau = new JButton(new ImageIcon("data/images/go-first.png")));
+		btnDau.setBackground(Color.WHITE);
 		pnNorth_New.add(btnTruoc = new JButton(new ImageIcon("data/images/go-previous.png")));
+		btnTruoc.setBackground(Color.WHITE);
 		pnNorth_New.add(lblMauTin = new JLabel());
 		pnNorth_New.add(btnSau = new JButton(new ImageIcon("data/images/go-next.png")));
+		btnSau.setBackground(Color.WHITE);
 		pnNorth_New.add(btnCuoi = new JButton(new ImageIcon("data/images/go-last.png")));
+		btnCuoi.setBackground(Color.WHITE);
 		
 		JPanel pnTimKiem = new JPanel();
 		pnTimKiem.setBorder(new CompoundBorder(
@@ -280,13 +314,13 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		JScrollPane scroll;
 		pnCenter.add(scroll = new JScrollPane(table = new JTable(dataModel)));
 		scroll.setBorder(BorderFactory.createTitledBorder("Danh sách nhân viên"));
-		add(pnCenter, BorderLayout.CENTER);
+		getContentPane().add(pnCenter, BorderLayout.CENTER);
 		Border bdCenter = BorderFactory.createLineBorder(Color.GRAY, 1);
 		TitledBorder TittleCenter = new TitledBorder(bdCenter, "");
 		pnCenter.setBorder(TittleCenter);
 
 		JPanel pnSouth = new JPanel();
-		add(pnSouth, BorderLayout.SOUTH);
+		getContentPane().add(pnSouth, BorderLayout.SOUTH);
 		pnSouth.add(Box.createHorizontalStrut(1000));
 		pnSouth.add(btnXemCTCL = new JButton("Xem chi tiết ca làm"));
 		btnXemCTCL.setForeground(Color.red);

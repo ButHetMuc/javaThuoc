@@ -39,8 +39,8 @@ public class Admin extends JFrame  {
 	private JMenuItem mntmTimKH;
 	private JMenu mnNhanVien;
 	private JMenuItem mntmQuanLiNV;
-	private JMenu mnTaiKhoan;
-	private JMenuItem mntmQuanLiTK;
+	private JMenu mnDoanhThu;
+	private JMenuItem mntmDoanhThu;
 	private JMenuItem mntmThemTK;
 	
 	private DangNhap_gui dangNhapGui = new DangNhap_gui();
@@ -48,7 +48,7 @@ public class Admin extends JFrame  {
 	private HoaDon_gui hoaDonGui = new HoaDon_gui();
 	private KhachHang_gui khachHangGui = new KhachHang_gui();
 	private NhanVien_gui nhanVienGui = new NhanVien_gui();
-	private QuanLiThuoc quanLiThuocGui = new QuanLiThuoc();
+	private QuanLiThuoc_gui quanLiThuocGui = new QuanLiThuoc_gui();
 	private TaoHoaDon_gui taoHoaDonGui = new TaoHoaDon_gui();
 	private TimKiemHoaDon_gui timKiemHoaDonGui = new TimKiemHoaDon_gui();
 	private TimKiemThuoc timKiemThuocGui = new TimKiemThuoc();
@@ -78,6 +78,7 @@ public class Admin extends JFrame  {
 	 * Create the frame.
 	 */
 	public Admin() throws SQLException {
+		setTitle("Quản lí hiệu thuốc");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0,0, 1300, 700);
 		icon = new ImageIcon("data/images/snakelogo1.png");
@@ -134,11 +135,11 @@ public class Admin extends JFrame  {
 		mntmQuanLiNV = new JMenuItem("Quản lí nhân viên");
 		mnNhanVien.add(mntmQuanLiNV);
 		
-		mnTaiKhoan = new JMenu("Tài khoản");
-		menuBar.add(mnTaiKhoan);
+		mnDoanhThu = new JMenu("Doanh thu");
+		menuBar.add(mnDoanhThu);
 		
-		mntmQuanLiTK = new JMenuItem("Quản lí tài khoản");
-		mnTaiKhoan.add(mntmQuanLiTK);
+		mntmDoanhThu = new JMenuItem("Xem doanh thu");
+		mnDoanhThu.add(mntmDoanhThu);
 		
 		mnTrangChu.addMenuListener(new MenuListener() {
 			
@@ -200,6 +201,13 @@ public class Admin extends JFrame  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				renderMain(timKiemHoaDonGui.getContentpan(), "tim kiem hoa don");
+			}
+		});
+		mntmDoanhThu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(doanhThuGui.getContenpain(), "doanh thu");
 			}
 		});
 		

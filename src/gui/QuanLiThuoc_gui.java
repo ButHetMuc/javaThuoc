@@ -50,7 +50,7 @@ import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import javax.swing.Box;
 
-public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener,KeyListener {
+public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseListener,KeyListener {
 
 	private JPanel contentPane;
 	private JComboBox cboLoaiThuoc;
@@ -86,7 +86,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					QuanLiThuoc frame = new QuanLiThuoc();
+					QuanLiThuoc_gui frame = new QuanLiThuoc_gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,7 +98,7 @@ public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener
 	/**
 	 * Create the frame.
 	 */
-	public QuanLiThuoc() throws SQLException {
+	public QuanLiThuoc_gui() throws SQLException {
 		new ConnectDB();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -278,8 +278,8 @@ public class QuanLiThuoc extends JFrame implements ActionListener, MouseListener
 		pnChucNang.add(btnLamMoi);
 
 		JPanel pnCenter = new JPanel();
-		pnCenter.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				new BevelBorder(BevelBorder.RAISED, null, null, null, null)));
+//		pnCenter.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
+//				new BevelBorder(BevelBorder.RAISED, null, null, null, null)));
 		contentPane.add(pnCenter, BorderLayout.CENTER);
 		pnCenter.setLayout(new BorderLayout(0, 0));
 
