@@ -56,7 +56,8 @@ public class ChiTietHoaDon_dao extends ConnectDB{
             maHD = rs.getInt(1);
             HoaDon hd = new HoaDon(maHD);
             int mathuoc = rs.getInt(2);
-            Thuoc thuoc = new Thuoc(mathuoc);
+            
+            Thuoc thuoc = new Thuoc_dao().findByMaThuoc(mathuoc);
             int soluong = rs.getInt(3);
             dscthd.add(new ChiTietHoaDon(hd, thuoc, soluong));
             

@@ -257,6 +257,43 @@ public class HoaDon_dao extends ConnectDB{
 		return this.error;
 	}
 	
+	public ArrayList<HoaDon> findHoaDon(String value, String type) {
+		ArrayList<HoaDon> dshd = new ArrayList<>();
+		
+		if(type.equals("tenKhachHang") || type.equals("soDienThoai")) {
+			try {
+	            PreparedStatement ps = this.con.prepareStatement("SELECT maHoaDon, a.maKhachHang, maNhanVien, tongTien, ngayLap, tenKhachHang "
+	            		+ "FROM dbo.HoaDon as a "
+	            		+ "join KhachHang as b on a.maKhachHang = b.maKhachHang where " + type + " like ? ");
+	            ps.setString(1,"%" +  value + "%");
+	            
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	            	HoaDon hd = new HoaDon(rs);
+	            	hd.setChiTietHoaDons(new ChiTietHoaDon_dao().getDSChiTietHD(hd.getMaHD()));
+	            	dshd.add(hd);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } 
+		}else {
+			try {
+	            PreparedStatement ps = this.con.prepareStatement("SELECT * FROM dbo.HoaDon where " + type + " like ? ");
+	            ps.setString(1,"%" +  value + "%");
+	            
+	            ResultSet rs = ps.executeQuery();
+	            while (rs.next()) {
+	            	HoaDon hd = new HoaDon(rs);
+	            	hd.setChiTietHoaDons(new ChiTietHoaDon_dao().getDSChiTietHD(hd.getMaHD()));
+	            	dshd.add(hd);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } 
+		}
+		return dshd;
+	}
+	
 	
 	
 

@@ -4,6 +4,8 @@ import java.awt.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -34,9 +36,9 @@ import entity.HoaDon;
 import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
-public class HoaDon_gui extends JFrame implements ActionListener{
+public class HoaDon_gui extends JFrame implements ActionListener, MouseListener, KeyListener{
 	private DefaultTableModel modelHD;
-	String[] colsHD = { "Mã hoá đơn", "Mã khách hàng","Tên khách hàng","Số điện thoại","Tổng tiền", "Ngày lập"};
+	String[] colsHD = { "Mã hoá đơn","Tên khách hàng","Số điện thoại","Tổng tiền", "Ngày lập"};
 	public JPanel pnMain;
 	private JTable tableHD;
 	private JPanel panel_1;
@@ -44,7 +46,6 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 
 	
 	private JTextField txtTongTien;
-	private JButton btnTimKiem;
 	private JTextField txtDiaChi;
 	private JButton btnXoa;
 	private JComboBox cboTimKiem;
@@ -55,14 +56,13 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 	private JLabel lblMaHD;
 	private JTextField txtMaHD;
 //	private ArrayList<HoaDon> dshd;
-	private JTextField txtMaKH;
+	
 	private JTextField txtSdt;
 	private JTextField txtTenKH;
 	private JTextField txtTimKiem;
 	private boolean isTimKiem = false;
 	private JButton btnXuatHoaDon;
 	private ArrayList<HoaDon> dshd;
-	private JButton btnLamMoi;
 
 	public HoaDon_gui() throws SQLException {
 		
@@ -91,7 +91,7 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 		pn.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 				"Chi tiết", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pn.setBounds(10, 65, 347, 330);
+		pn.setBounds(10, 65, 347, 220);
 		pnMain.add(pn);
 		pn.setLayout(null);
 		
@@ -106,60 +106,50 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 		txtMaHD.setBounds(122, 24, 205, 25);
 		pn.add(txtMaHD);
 
-		JLabel lbMaKH = new JLabel("Mã khách hàng:");
-		lbMaKH.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbMaKH.setBounds(10, 60, 93, 25);
-		pn.add(lbMaKH);
 		
-		txtMaKH = new JTextField();
-		txtMaKH.setEditable(false);
-		txtMaKH.setColumns(10);
-		txtMaKH.setBounds(122, 60, 205, 25);
-		pn.add(txtMaKH);
-
 		JLabel lbTen = new JLabel("Tên khách hàng:");
 		lbTen.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbTen.setBounds(10, 96, 93, 25);
+		lbTen.setBounds(10, 56, 93, 25);
 		pn.add(lbTen);
 		
 		txtTenKH = new JTextField();
 		txtTenKH.setEditable(false);
 		txtTenKH.setColumns(10);
-		txtTenKH.setBounds(122, 96, 205, 25);
+		txtTenKH.setBounds(122, 56, 205, 25);
 		pn.add(txtTenKH);
 		
 		JLabel lbSoDienThoai = new JLabel("Số điện thoại:");
 		lbSoDienThoai.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbSoDienThoai.setBounds(10, 129, 93, 25);
+		lbSoDienThoai.setBounds(10, 88, 93, 25);
 		pn.add(lbSoDienThoai);
 		
 		txtSdt = new JTextField();
 		txtSdt.setEditable(false);
 		txtSdt.setColumns(10);
-		txtSdt.setBounds(122, 129, 205, 25);
+		txtSdt.setBounds(122, 88, 205, 25);
 		pn.add(txtSdt);
 		
 		JLabel lblTongTien = new JLabel("Tổng tiền:");
 		lblTongTien.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTongTien.setBounds(10, 162, 93, 25);
+		lblTongTien.setBounds(10, 120, 93, 25);
 		pn.add(lblTongTien);
 		txtTongTien = new JTextField();
 		txtTongTien.setEditable(false);
 		txtTongTien.setColumns(10);
-		txtTongTien.setBounds(122, 162, 205, 25);
+		txtTongTien.setBounds(122, 120, 205, 25);
 		pn.add(txtTongTien);
 		
 		
 
 		btnXoa = new JButton("Xóa");
-		btnXoa.setBounds(10, 247, 154, 35);
+		btnXoa.setBounds(10, 160, 154, 35);
 		pn.add(btnXoa);
 		btnXoa.setIcon(new ImageIcon("data/images/cancel_16.png"));
 		btnXoa.setBackground(Color.WHITE);
 		
 		btnXuatHoaDon = new JButton("Xuất hóa đơn");
 		btnXuatHoaDon.setBackground(Color.WHITE);
-		btnXuatHoaDon.setBounds(174, 247, 154, 35);
+		btnXuatHoaDon.setBounds(174, 160, 154, 35);
 		pn.add(btnXuatHoaDon);
 		
 		panel_1 = new JPanel();
@@ -171,9 +161,7 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 		pnMain.add(panel_1);
 		panel_1.setLayout(null);
 		modelHD = new DefaultTableModel(colsHD, 0) {
-			/**
-			 * 
-			 */
+		
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -190,39 +178,36 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 		panel_1.add(scHD);
 		
 		
+		JLabel lblKieuTimKiem = new JLabel("Tìm kiếm theo:");
+		lblKieuTimKiem.setBounds(20, 29, 120, 25);
+		panel_1.add(lblKieuTimKiem);
+		
 		DefaultComboBoxModel<String> modelTimKiem = new DefaultComboBoxModel<String>();
 		cboTimKiem = new JComboBox(modelTimKiem);
-		cboTimKiem.setBounds(20, 29, 120, 25);
+		cboTimKiem.setBounds(110, 29, 120, 25);
 		panel_1.add(cboTimKiem);
 		modelTimKiem.addElement("Mã hóa đơn");
-		modelTimKiem.addElement("Mã khách hàng");
 		modelTimKiem.addElement("Tên khách hàng");
 		modelTimKiem.addElement("Số điện thoại");
 
+		JLabel lblTimKiem = new JLabel("Nhập giá trị tìm kiếm:");
+		lblTimKiem.setPreferredSize(new Dimension(130, 25));
+		lblTimKiem.setBounds(260, 29, 120, 25);
+		panel_1.add(lblTimKiem);
+		
 		txtTimKiem = new JTextField();
-		txtTimKiem.setBounds(150, 29, 120, 25);
+		txtTimKiem.setBounds(390, 29, 120, 25);
 		panel_1.add(txtTimKiem);
 		txtTimKiem.setColumns(10);
-
 		
-		btnTimKiem = new JButton("Tìm");
-		btnTimKiem.setIcon(new ImageIcon("data/images/search_16.png"));
-		btnTimKiem.setBounds(285, 29, 115, 25);
-		btnTimKiem.setBackground(Color.WHITE);
-		panel_1.add(btnTimKiem);
 		
-		ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
-		btnLamMoi = new JButton("Làm mới dữ liệu", icon_refresh);
-		btnLamMoi.setBackground(Color.WHITE);
-		btnLamMoi.setBounds(410, 29, 165, 25);
-		panel_1.add(btnLamMoi);
-		
-		btnLamMoi.addActionListener(this);
-		btnTimKiem.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnXuatHoaDon.addActionListener(this);
+		tableHD.addMouseListener(this);
+		txtTimKiem.addKeyListener(this);
 		
 		renderData();
+		formatMoneyToDouble("100.000 đồng");
 		
 		
 	}
@@ -234,6 +219,19 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 	    return str1 + " đồng";
 	}
 	
+	private double formatMoneyToDouble(String str) {
+		String[] s = str.split("[. đồng]");
+		String tmp = "";
+		
+		for (String string : s) {
+			tmp += string;
+		}
+		
+		return Double.parseDouble(tmp);
+	}
+	
+	
+	
 	public void renderData() throws SQLException {
 		dshd = new HoaDon_dao().getDSHD();
 		
@@ -242,7 +240,6 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 		dshd.forEach(hd -> {
 			modelHD.addRow(new Object[] {
 				hd.getMaHD(), 
-				hd.getKhachHang().getMaKhachHang(), 
 				hd.getKhachHang().getTenKhachHang(), 
 				hd.getKhachHang().getSoDienThoai(),
 				formatNumberForMoney(hd.getTongTien()),
@@ -262,13 +259,11 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 	
 	public void clear() {
 		tableHD.clearSelection();
-		tblDSThuoc.clearSelection();
 		modelDSThuoc.getDataVector().removeAllElements();
 		tblDSThuoc.revalidate();
 		tblDSThuoc.repaint();
 		
 		txtMaHD.setText("");
-		txtMaKH.setText("");
 		txtTenKH.setText("");
 		txtSdt.setText("");
 		txtTongTien.setText("");
@@ -283,25 +278,7 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
-		if(o.equals(btnTimKiem)) {
-			try {
-				String key = "maHoaDon";
-				if(cboTimKiem.getSelectedIndex() == 1) {
-					key = "KhachHang.maKhachHang";
-				}else if(cboTimKiem.getSelectedIndex() == 2) {
-					key = "KhachHang.HoTen";
-				}else if(cboTimKiem.getSelectedIndex() == 3) {
-					key = "KhachHang.soDienThoai";
-				}
-				
-				dshd = (ArrayList<HoaDon>) new HoaDon_dao().timKiem(key, txtTimKiem.getText());
-				renderDataTimKiem();
-				isTimKiem = true;
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+	
 		if(o.equals(btnXoa)) {
 			int idx = tableHD.getSelectedRow();
 			if(idx == -1) {
@@ -339,20 +316,7 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 			}
 			
 		}
-		if(o.equals(btnLamMoi)) {
-			try {
-				isTimKiem  = false;
-				
-				clear();
-				
-				renderData();
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-		}
+		
 		if(o.equals(btnXuatHoaDon)) {
 			int idx = tableHD.getSelectedRow();
 			if(idx == -1) {
@@ -387,5 +351,99 @@ public class HoaDon_gui extends JFrame implements ActionListener{
 			
 			tableHD.revalidate();
 			tableHD.repaint();
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int row = tableHD.getSelectedRow();
+		if(row == -1) {
+			return;
+		}
+		
+		txtMaHD.setText(tableHD.getValueAt(row, 0).toString());
+		txtTenKH.setText(tableHD.getValueAt(row, 1).toString());
+		txtSdt.setText(tableHD.getValueAt(row, 2).toString());
+		txtTongTien.setText(tableHD.getValueAt(row, 3).toString());
+		
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		String type = (String) cboTimKiem.getSelectedItem();
+		String value = txtTimKiem.getText();
+		
+		if(type.equals("Mã hóa đơn")) {
+			try {
+				dshd = new HoaDon_dao().findHoaDon(value, "maHoaDon");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			renderData2();
+		}else if(type.equals("Tên khách hàng")) {
+			try {
+				dshd = new HoaDon_dao().findHoaDon(value,"tenKhachHang");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			renderData2();
+		}else if(type.equals("Số điện thoại")) {
+			try {
+				dshd = new HoaDon_dao().findHoaDon(value,"soDienThoai");
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			renderData2();
+		}
+	}
+	private void renderData2() {
+		// TODO Auto-generated method stub
+		tableHD.clearSelection();
+		modelHD.getDataVector().removeAllElements();
+		dshd.forEach(hd -> {
+			modelHD.addRow(new Object[] {
+				hd.getMaHD(), 
+				hd.getKhachHang().getTenKhachHang(), 
+				hd.getKhachHang().getSoDienThoai(),
+				formatNumberForMoney(hd.getTongTien()),
+				hd.getNgayLap()
+			});
+		});
+		tableHD.revalidate();
+		tableHD.repaint();
+		
 	}
 	}

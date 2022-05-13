@@ -114,4 +114,24 @@ public class Thuoc_dao  {
 		return false;
 	}
 
+	public Thuoc findByMaThuoc(int maThuoc) {
+		try {
+			PreparedStatement ps = ConnectDB.getConnection().prepareStatement("select * from Thuoc a join NhaCungCap b on "
+					+ "a.maNhaCungCap = b.maNhaCungCap join LoaiThuoc c "
+					+ "on a.maLoaiThuoc = c.maLoaiThuoc where a.maThuoc = ? " );
+			ps.setInt(1, maThuoc);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				Thuoc t = new Thuoc(rs);
+				return t;
+			}
+
+			return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 }

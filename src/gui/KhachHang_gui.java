@@ -66,7 +66,8 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 	private JTextField txtMaKh,txtTenKh,txtSdt;
 	private DefaultTableModel model;     
 	private ArrayList<KhachHang> dskh;  
-	private JButton btnSuaKh,btnLayToanBoDuLieu,btnLuu;
+	private JButton btnSuaKh,btnLuu;
+	private JButton btnLayToanBoDuLieu;
 	private DefaultComboBoxModel<String> cboLoaiTimKiem;
 	private JComboBox<String> cmbLoaiTimKiem;
 	

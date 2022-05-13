@@ -231,10 +231,17 @@ public class XuatHoaDon_gui extends JFrame implements Printable{
 		
 		tongTien = 0.0;
 		modelDSSP.getDataVector().removeAllElements();
+		
+		
+		System.out.println("cthd :" + hd.getChiTietHoaDons().size());
+		
+		
 		hd.getChiTietHoaDons().forEach(cthd -> {
 			modelDSSP.addRow(new Object[] {
 				cthd.getThuoc().getTenThuoc(),
+				cthd.getThuoc().getDonGia(),
 				cthd.getSoLuong(),
+				cthd.getSoLuong()*cthd.getDonGia()
 			});
 			tongTien += cthd.getThuoc().getDonGia() * cthd.getSoLuong();
 		});

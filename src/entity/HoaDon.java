@@ -57,9 +57,7 @@ public class HoaDon {
 	public HoaDon(ResultSet rs) throws SQLException {
 		this.maHD = rs.getInt("maHoaDon");
 		this.ngayLap = rs.getDate("ngayLap");
-
-	    
-
+		this.tongTien = rs.getDouble("tongTien");
 		try {
 			this.nhanVien = new NhanVien(rs);
 		}catch (Exception e) {
