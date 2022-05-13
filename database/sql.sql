@@ -194,4 +194,21 @@ go
 		insert into Thuoc values(3,'COTTUF L100ML',100,3,'12/7/2018','20/9/2023',N'hộp',160000)
 	go
 
+	insert into HoaDon values(1,1,200000,'29/1/2020')
+	insert into HoaDon values(2,2,300000,'28/2/2020')
+	insert into HoaDon values(3,3,400000,'29/3/2020')
+	insert into HoaDon values(4,1,500000,'29/4/2020')
 
+	go
+
+	insert into ChiTietHoaDon values(1,1,10,200000)
+	insert into ChiTietHoaDon values(1,2,10,300000)
+	insert into ChiTietHoaDon values(1,3,10,400000)
+	insert into ChiTietHoaDon values(1,4,10,500000)
+	insert into ChiTietHoaDon values(1,5,10,600000)
+
+	insert into ChiTietHoaDon values(2,1,10,200000)
+	insert into ChiTietHoaDon values(2,2,10,300000)
+	insert into ChiTietHoaDon values(2,3,10,400000)
+	insert into ChiTietHoaDon values(2,4,10,500000)
+	insert into ChiTietHoaDon values(2,5,10,600000)

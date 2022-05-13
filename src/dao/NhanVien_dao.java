@@ -16,8 +16,13 @@ import entity.KhachHang;
 import entity.NhanVien;
 import entity.TaiKhoan;
 
-public class NhanVien_dao {
-    public ArrayList<NhanVien> getAllNhanVien() {
+public class NhanVien_dao extends ConnectDB{
+    public NhanVien_dao() throws SQLException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public ArrayList<NhanVien> getAllNhanVien() {
         ArrayList<NhanVien> dsnv = new ArrayList<NhanVien>();
          
         Connection con = ConnectDB.getConnection();
@@ -76,7 +81,33 @@ public class NhanVien_dao {
         return n > 0;
 
     }
+    public NhanVien getNhanVienByMaNV(int maNV){
+	    PreparedStatement stmt = null;
+		try {
+		
+		    String sql = "select * from NhanVien nv join TaiKhoan tk on nv.tenTaiKhoan = tk.tenTaiKhoan where maNhanVien = ?";
+		    stmt = this.con.prepareStatement(sql);
+		    stmt.setInt(1, maNV);
+		    ResultSet rs = stmt.executeQuery();
 
+		    if(!rs.next()) {
+		    	return null;
+		    }
+		    
+	    	NhanVien nv = new NhanVien(rs);
+	    	return nv;
+		   
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		} finally {
+		    try {
+		        stmt.close();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		}
+		return null;		
+	}
     public boolean update(NhanVien nv) {
          
         Connection con = ConnectDB.getConnection();

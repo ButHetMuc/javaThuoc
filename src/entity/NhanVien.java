@@ -1,7 +1,8 @@
 package entity;
 
 import java.sql.Date;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -47,7 +48,18 @@ public class NhanVien {
 		this.luong = luong;
 	}
 
-
+	public NhanVien(ResultSet rs) throws SQLException {
+		this.maNhanVien = rs.getInt("maNhanVien");
+		this.tenNhanVien = rs.getString("tenNhanVien");
+		this.soDienThoai = rs.getString("soDienThoai");
+		this.diaChi = rs.getString("diaChi");
+		this.CMND = rs.getString("CMND");
+		this.ngaySinh = rs.getDate("NgaySinh");
+		this.gioiTinh = rs.getBoolean("GioiTinh");
+		this.luong = rs.getBigDecimal("Luong");
+		this.caLam = new CaLam(rs.getInt("maCaLam"));
+		this.taiKhoan = new TaiKhoan(rs.getString("TenTaiKhoan"));
+	}
 
 	public NhanVien(int maNhanVien) {
 		super();

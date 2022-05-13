@@ -25,7 +25,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.awt.GridLayout;
@@ -34,6 +36,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+
+import dao.HoaDon_dao;
+import dao.KhachHang_dao;
+import dao.NhanVien_dao;
+import dao.Thuoc_dao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
@@ -74,7 +81,7 @@ public class TaoHoaDon_gui extends JFrame {
 	private JButton btnThemHD; 
 	private JTextField txtTongTien;
 	private JTable tblThuocTGH;
-	private NhanVien nhanVien;
+	private NhanVien nhanVien = new NhanVien_dao().getNhanVienByMaNV(1);
 
 	/**
 	 * Launch the application.
@@ -180,20 +187,6 @@ public class TaoHoaDon_gui extends JFrame {
 		txtSDT.setColumns(20);
 		pnSoDienThoai.add(txtSDT);
 		
-		JPanel pnDiaChi = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) pnDiaChi.getLayout();
-		flowLayout_3.setAlignment(FlowLayout.LEFT);
-		pnThongTin.add(pnDiaChi);
-		
-		JLabel lblDiaChi = new JLabel("Địa chỉ");
-		lblDiaChi.setPreferredSize(new Dimension(100, 20));
-		pnDiaChi.add(lblDiaChi);
-		
-		txtDiaChi = new JTextField();
-		txtDiaChi.setEditable(false);
-		txtDiaChi.setPreferredSize(new Dimension(7, 30));
-		txtDiaChi.setColumns(20);
-		pnDiaChi.add(txtDiaChi);
 		
 		JPanel pnTongTien = new JPanel();
 		pnThongTin.add(pnTongTien);
@@ -238,8 +231,8 @@ public class TaoHoaDon_gui extends JFrame {
 		
 		String[] cols = {"Tên Thuốc", "Đơn giá", "Số lượng", "Nhà cung cấp"};
 		modelThuoc = new DefaultTableModel(cols, 0);
-		JTable tblSach = new JTable(modelThuoc);
-		JScrollPane scrollPane = new JScrollPane(tblSach);
+		JTable tblThuoc = new JTable(modelThuoc);
+		JScrollPane scrollPane = new JScrollPane(tblThuoc);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel_7.add(scrollPane);
 		
@@ -307,10 +300,214 @@ public class TaoHoaDon_gui extends JFrame {
 		scrollPane_1.setPreferredSize(new Dimension(450, 500));
 		panel_3.add(scrollPane_1, BorderLayout.CENTER);
 		
+		renderKhachHang();
+		renderData();
+		
+		cboKH.addActionListener((e) -> {
+			int idx = cboKH.getSelectedIndex();
+			if(idx != -1) {
+				idx--;
+				if(idx == -1) {
+					txtMaKH.setText("");
+					txtSDT.setText("");
+					return;
+				}
+				txtMaKH.setText(String.valueOf(dskh.get(idx).getMaKhachHang()));
+				txtSDT.setText(dskh.get(idx).getSoDienThoai());
+			}
+		});
+		
+		btnThemThuoc.addActionListener((e) -> {
+			
+			int idx;
+			Thuoc thuoc = null;
+			if(tblThuoc.getSelectedRow() != -1) {
+				idx = tblThuoc.getSelectedRow();
+				thuoc = dsThuoc.get(idx); // Thuốc
+			}
+			int soLuong = 0;
+			try {
+				soLuong = Integer.parseInt(txtSoLuong.getText());
+			}catch (Exception e2) {
+				JOptionPane.showMessageDialog(contentPane, "Số lượng phải lớn hơn 0");
+				txtSoLuong.requestFocus();
+				return;
+			}
+			
+			if(soLuong > thuoc.getSoLuong()) {
+				JOptionPane.showMessageDialog(contentPane, "Số lượng không đủ");
+				txtSoLuong.requestFocus();
+				return;
+			}
+			
+			
+//			kiểm tra xem đã có thuốc đó trong giỏ chưa
+			int vt = -1;
+			for(int i=0; i<dscthd.size(); i++) {
+				if(dscthd.get(i).getThuoc().getMaThuoc() == thuoc.getMaThuoc())
+					vt = i;
+			}
+			if(vt != -1) { // thêm số lượng
+				dscthd.get(vt).setSoLuong(dscthd.get(vt).getSoLuong() + soLuong);
+			}else { // thêm thuốc
+				ChiTietHoaDon cthd = new ChiTietHoaDon(thuoc, soLuong);
+				dscthd.add(cthd);
+			}
+			tinhTongTien();
+			
+			try {
+				renderData();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+		});
+		
+		
+		btnBoThuoc.addActionListener((e) -> {
+			int idx = tblThuocTGH.getSelectedRow();
+			if(idx != -1) {
+				int soLuong = 0;
+				try {
+					soLuong = Integer.parseInt(txtSoLuong.getText());
+				}catch (Exception e2) {
+					JOptionPane.showMessageDialog(contentPane, "Số lượng phải lớn hơn 0");
+					txtSoLuong.requestFocus();
+					return;
+				}
+				
+				if(soLuong > dscthd.get(idx).getSoLuong()) {
+					JOptionPane.showMessageDialog(contentPane, "Số lượng không hợp lệ");
+					txtSoLuong.requestFocus();
+					return;
+				}else if(soLuong == dscthd.get(idx).getSoLuong()) {	
+					dscthd.remove(idx);
+				}else {
+					dscthd.get(idx).setSoLuong(dscthd.get(idx).getSoLuong() - soLuong);
+				}
+				
+				tinhTongTien();
+				try {
+					renderData();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		btnThemHD.addActionListener((e) -> {
+			int idx = cboKH.getSelectedIndex(); 
+			if(idx <= 0) {
+				JOptionPane.showMessageDialog(contentPane, "Vui lòng chọn khách hàng");
+				return;
+			}
+			
+			if(dscthd.size() == 0) {
+				JOptionPane.showMessageDialog(contentPane, "Vui lòng thêm hàng vào giỏ");
+				return;
+			}
+			
+			int choose = JOptionPane.showConfirmDialog(contentPane, "Chắc chắn tạo hóa đơn");
+			if(choose == 0) {
+				HoaDon hd = new HoaDon(this.nhanVien, dskh.get(idx-1), dscthd);
+				try {
+					HoaDon_dao hoaDonDao = new HoaDon_dao();
+					if(hoaDonDao.themHoaDon(hd)) {
+						
+						
+						int choose2 = JOptionPane.showConfirmDialog(contentPane, "Đã thêm hóa đơn thành công, bạn có muốn xuất hóa đơn không ?");
+						if(choose2 == 0) {
+							hd.setMaHD(hoaDonDao.getLastestMaHD());
+							XuatHoaDon_gui xuaHoaDonGUI = new XuatHoaDon_gui();
+							xuaHoaDonGUI.setHoaDon(hd);
+							xuaHoaDonGUI.setVisible(true);
+							xuaHoaDonGUI.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+						}
+						dscthd.clear();
+						tinhTongTien();
+						renderData();
+					}else {
+						JOptionPane.showMessageDialog(contentPane, hoaDonDao.getError());
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		
 	}
-	public JPanel getContentpane() {
+	
+
+	public void renderKhachHang() throws SQLException {
+		dskh = new KhachHang_dao().getAll();
+		modelKH.addElement("");
+		cboKH.setSelectedIndex(0);
+		
+		dskh.forEach(kh -> {
+			modelKH.addElement("#"+ kh.getMaKhachHang()+ " " + kh.getTenKhachHang());
+		});
+		cboKH.revalidate();
+		cboKH.repaint();
+	}
+	
+	private void renderData() throws SQLException {
+		// TODO Auto-generated method stub
+		dsThuoc = new Thuoc_dao().getDsThuoc();
+		modelThuoc.getDataVector().removeAllElements();
+		for(int i=0; i<dsThuoc.size(); i++) {
+			boolean flag = true;
+			for(int j=0; j<dscthd.size(); j++) {
+				if(dscthd.get(j).getThuoc().getMaThuoc() == dsThuoc.get(i).getMaThuoc()) {
+					dsThuoc.get(i).setSoLuong(dsThuoc.get(i).getSoLuong() - dscthd.get(j).getSoLuong());
+				}
+			}
+			if(dsThuoc.get(i).getSoLuong() != 0) {
+				modelThuoc.addRow(new Object[] {
+						dsThuoc.get(i).getTenThuoc(), 
+						formatNumberForMoney(dsThuoc.get(i).getDonGia()), 
+						dsThuoc.get(i).getSoLuong(),
+						dsThuoc.get(i).getNhaCungCap().getTenNhaCungCap()
+					});
+			}else {
+				dsThuoc.remove(i);
+				i--;
+			}
+			
+		}
+//		Thuốc trong giỏ hàng
+		tblThuocTGH.clearSelection();
+		modelThuocTGH.getDataVector().removeAllElements();
+		dscthd.forEach(cthd -> {
+			modelThuocTGH.addRow(new Object[] {cthd.getThuoc().getTenThuoc(), formatNumberForMoney(cthd.getThuoc().getDonGia()), cthd.getSoLuong(),formatNumberForMoney(cthd.tinhThanhTien())});
+		});
+		tblThuocTGH.revalidate();
+		tblThuocTGH.repaint();
+	}
+
+	private String formatNumberForMoney(double money) {
+		Locale localeVN = new Locale("vi", "VN");
+		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+	    String str1 = currencyVN.format(Math.round(money));
+	    str1 = str1.substring(0,str1.length() - 2);
+	    return str1 + " đồng";
+	}
+
+	public void tinhTongTien() {
+		double tongTien = 0;
+		for(int i=0; i<dscthd.size(); i++) {
+			tongTien += dscthd.get(i).tinhThanhTien();
+		}
+		txtTongTien.setText(formatNumberForMoney(tongTien));
+	}
+	
+	
+	public JPanel getContentPane() {
 		return this.contentPane;
 	}
 
 }
-

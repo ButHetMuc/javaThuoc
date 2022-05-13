@@ -1,7 +1,16 @@
 package entity;
 
+
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+
+import dao.KhachHang_dao;
+
+import dao.NhanVien_dao;
+
 
 public class HoaDon {
 	
@@ -13,6 +22,7 @@ public class HoaDon {
 	public KhachHang khachHang;
 	public ArrayList<ChiTietHoaDon> chiTietHoaDons = new ArrayList<ChiTietHoaDon>();
 	
+	
 	public HoaDon() {
 		super();
 	}
@@ -21,7 +31,18 @@ public class HoaDon {
 		super();
 		this.maHD = maHD;
 	}
-
+	
+	public HoaDon(NhanVien nhanVien, KhachHang khachHang,
+			ArrayList<ChiTietHoaDon> chiTietHoaDons) {
+		super();
+		
+		this.ngayLap = new Date(new java.util.Date().getTime());
+		this.nhanVien = nhanVien;
+		this.khachHang = khachHang;
+		this.chiTietHoaDons = chiTietHoaDons;
+		this.tongTien = tinhTongTien();
+	}
+	
 	public HoaDon(int maHD, Date ngayLap, double tongTien, NhanVien nhanVien, KhachHang khachHang,
 			ArrayList<ChiTietHoaDon> chiTietHoaDons) {
 		super();
@@ -32,7 +53,24 @@ public class HoaDon {
 		this.khachHang = khachHang;
 		this.chiTietHoaDons = chiTietHoaDons;
 	}
-
+	
+	public HoaDon(ResultSet rs) throws SQLException {
+		this.maHD = rs.getInt("maHoaDon");
+		this.ngayLap = rs.getDate("ngayLap");
+		this.tongTien = rs.getDouble("tongTien");
+		try {
+			this.nhanVien = new NhanVien(rs);
+		}catch (Exception e) {
+			this.nhanVien = new NhanVien_dao().findNhanVienById(rs.getString("maNhanVien"));
+		}
+		try {
+			this.khachHang = new KhachHang(rs);
+		}catch (Exception e) {
+			this.khachHang = new KhachHang_dao().getKhachHang(rs.getInt("maKhachHang"));
+		}
+		
+	}
+	
 	public int getMaHD() {
 		return maHD;
 	}
@@ -80,7 +118,7 @@ public class HoaDon {
 	public void setChiTietHoaDons(ArrayList<ChiTietHoaDon> chiTietHoaDons) {
 		this.chiTietHoaDons = chiTietHoaDons;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -102,12 +140,20 @@ public class HoaDon {
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "HoaDon [maHD=" + maHD + ", ngayLap=" + ngayLap + ", tongTien=" + tongTien + ", nhanVien=" + nhanVien
 				+ ", khachHang=" + khachHang + ", chiTietHoaDons=" + chiTietHoaDons + "]";
 	}
-	
+
+	public double tinhTongTien() {
+		double tongTien = 0;
+		for(int i=0; i<chiTietHoaDons.size(); i++) {
+			tongTien += chiTietHoaDons.get(i).tinhThanhTien();
+		}
+		return tongTien;
+		
+	}
 	
 }

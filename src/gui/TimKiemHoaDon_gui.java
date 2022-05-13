@@ -8,6 +8,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+
+import dao.HoaDon_dao;
+import entity.HoaDon;
+
 //import dao.HoaDonDAO;
 //import entity.HoaDon;
 //import util.Currency;
@@ -28,7 +32,9 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 
@@ -38,7 +44,7 @@ public class TimKiemHoaDon_gui extends JFrame {
 	private JTextField txtTenKH;
 	private JTextField txtSDT;
 	private JTextField txtDiaChi;
-//	private ArrayList<HoaDon> dshd;
+	private ArrayList<HoaDon> dshd;
 	private DefaultTableModel modelKq;
 	private JTable tblKetQua;
 
@@ -180,14 +186,95 @@ public class TimKiemHoaDon_gui extends JFrame {
 		panel_4.add(scrollPane);
 		
 		renderData();
+				
+		btnTimKiem.addActionListener((e) -> {
+			String where = "";
+			if(chkTenKH.isSelected()) {
+				where += "KhachHang.TenKhachHang like N'" + txtTenKH.getText() + "' and ";
+			}else {
+				where += "KhachHang.TenKhachHang like N'%" + txtTenKH.getText() + "%' and ";
+			}
+			
+			if(chkSDT.isSelected()) {
+				where += "KhachHang.SoDienThoai like N'" + txtSDT.getText() + "' and ";
+			}else {
+				where += "KhachHang.SoDienThoai like N'%" + txtSDT.getText() + "%' and ";
+			}
+			
+			try {
+				dshd = (ArrayList<HoaDon>) new HoaDon_dao().timKiem(where);
+				if(dshd.size() == 0) {
+					JOptionPane.showMessageDialog(contentPane, "Không có hóa đơn phù hợp");
+					return;
+				}
+				renderDataTimKiem();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		});
 		
-	}
 
-	private void renderData() {
-		// TODO Auto-generated method stub
-		
+		btnLamMoi.addActionListener((e) -> {
+			try {
+				renderData();
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		});
 	}
-	public JPanel getContentpan() {
+	private String formatNumberForMoney(double money) {
+		Locale localeVN = new Locale("vi", "VN");
+		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+	    String str1 = currencyVN.format(Math.round(money));
+	    str1 = str1.substring(0,str1.length() - 2);
+	    return str1 + " đồng";
+	}
+	
+	public void renderData() throws SQLException {
+		dshd = new HoaDon_dao().getDSHD();
+		
+		tblKetQua.clearSelection();
+		modelKq.getDataVector().removeAllElements();
+		dshd.forEach(hd -> {
+			modelKq.addRow(new Object[] {
+				hd.getMaHD(), 
+				hd.getKhachHang().getMaKhachHang(), 
+				hd.getKhachHang().getTenKhachHang(), 
+				hd.getKhachHang().getSoDienThoai(),
+				formatNumberForMoney(hd.tinhTongTien()).toString(),
+				hd.getNgayLap()
+			});
+		});
+		tblKetQua.revalidate();
+		tblKetQua.repaint();
+	}
+	
+	public void renderDataTimKiem() throws SQLException {
+		tblKetQua.clearSelection();
+		
+		modelKq.getDataVector().removeAllElements();
+		
+		dshd.forEach(hd -> {
+			modelKq.addRow(new Object[] {
+					hd.getMaHD(), 
+					hd.getKhachHang().getMaKhachHang(), 
+					hd.getKhachHang().getTenKhachHang(), 
+					hd.getKhachHang().getSoDienThoai(),
+					hd.tinhTongTien(),
+					hd.getNgayLap()
+				});
+		});
+		
+		tblKetQua.revalidate();
+		tblKetQua.repaint();
+	}
+	
+	public JPanel getContentPane() {
 		return this.contentPane;
 	}
 }
