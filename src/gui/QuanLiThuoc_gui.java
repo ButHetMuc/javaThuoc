@@ -19,8 +19,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
@@ -117,7 +120,7 @@ public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseList
 		FlowLayout flowLayout = (FlowLayout) pnTop.getLayout();
 		contentPane.add(pnTop, BorderLayout.NORTH);
 
-		JLabel lblTieuDe = new JLabel("Quản Lí Thuốc");
+		JLabel lblTieuDe = new JLabel("Quản lí thuốc");
 		lblTieuDe.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblTieuDe.setHorizontalAlignment(SwingConstants.CENTER);
 		pnTop.add(lblTieuDe);
@@ -517,6 +520,19 @@ public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseList
 				txtHanSuDung.requestFocus();
 				return false;
 			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				java.util.Date date1 = sdf.parse(ngaySX);
+				java.util.Date date2 = sdf.parse(hanSD);
+				if(date2.before(date1)) {
+					JOptionPane.showMessageDialog(null, "Hạn sử dụng phải sau ngày ngày sản xuất");
+					return false;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			
 		}
 
 		if (donGia.equals("")) {
@@ -660,6 +676,17 @@ public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseList
 			tmp += string;
 		}
 		return Double.parseDouble(tmp);
+	}
+	
+	public Date stringToDate (String strDate) {
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-mm-dd");
+		try {
+			Date date = (Date) formater.parse(strDate);
+			return date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

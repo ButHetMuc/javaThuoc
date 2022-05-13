@@ -117,7 +117,7 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 		
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel title = new JLabel("QUẢN LÝ KHÁCH HÀNG");
+		JLabel title = new JLabel("Quản lí khách hàng");
 		title.setFont(new Font("Tahoma", Font.BOLD, 20));
 		top.add(title);
 		out.add(top);

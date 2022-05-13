@@ -78,7 +78,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 		pnMain.setBounds(0, 0, 584, 411);
 		setContentPane(pnMain);
 
-		JLabel lbTitle = new JLabel("Quản Lý Hóa Đơn");
+		JLabel lbTitle = new JLabel("Quản lý hóa đơn");
 		lbTitle.setBounds(585, 11, 348, 30);
 		lbTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
 		pnMain.add(lbTitle);

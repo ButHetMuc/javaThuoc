@@ -110,7 +110,7 @@ public class NhanVien_gui extends JFrame implements ActionListener, KeyListener 
 		JPanel pnNorth = new JPanel();
 		JPanel pnQLNV = new JPanel();
 		JLabel lblQLNV;
-		pnQLNV.add(lblQLNV = new JLabel("QUẢN LÝ NHÂN VIÊN", JLabel.CENTER));
+		pnQLNV.add(lblQLNV = new JLabel("Quản lí nhân viên", JLabel.CENTER));
 		lblQLNV.setFont(new Font("Arial", Font.BOLD, 26));
 		pnNorth.add(pnQLNV);
 		getContentPane().add(pnNorth, BorderLayout.NORTH);

@@ -139,7 +139,7 @@ public class DoanhThu_gui extends JFrame implements ActionListener, MouseListene
 		
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel title = new JLabel("QUẢN LÝ DOANH THU");
+		JLabel title = new JLabel("Quản lí doanh thu");
 		title.setFont(new Font("Tahoma", Font.BOLD, 20));
 		top.add(title);
 		out.add(top);
