@@ -27,21 +27,17 @@ public class Admin extends JFrame  {
 	private JMenu mnTrangChu;
 	private JMenu mnThuoc;
 	private JMenuItem mntmQuanLiThuoc;
-	private JMenuItem mntmTimThuoc;
-	private JMenuItem mntmThemthuoc;
-	private JMenuItem mntmThongke;
+	private JMenuItem mntmThongkeThuoc;
 	private JMenu mnHoaDon;
 	private JMenuItem mntmQuanLiHD;
 	private JMenuItem mntmTimKiemHD;
 	private JMenu mnKhachHang;
 	private JMenuItem mntmQuanLiKH;
-	private JMenuItem mntmThemKH;
-	private JMenuItem mntmTimKH;
 	private JMenu mnNhanVien;
 	private JMenuItem mntmQuanLiNV;
 	private JMenu mnDoanhThu;
 	private JMenuItem mntmDoanhThu;
-	private JMenuItem mntmThemTK;
+
 	
 	private DangNhap_gui dangNhapGui = new DangNhap_gui();
 	private DoanhThu_gui doanhThuGui = new DoanhThu_gui();
@@ -53,6 +49,7 @@ public class Admin extends JFrame  {
 	private TimKiemHoaDon_gui timKiemHoaDonGui = new TimKiemHoaDon_gui();
 	private TimKiemThuoc timKiemThuocGui = new TimKiemThuoc();
 	private TrangChu_gui trangChuGui = new TrangChu_gui();
+	private ThongKeThuoc_gui thongKeThuocGui = new ThongKeThuoc_gui();
 	private JMenuItem mntmThemHoaDon;
 	private ImageIcon icon;
 	
@@ -108,8 +105,8 @@ public class Admin extends JFrame  {
 		mnThuoc.add(mntmQuanLiThuoc);
 		
 		
-		mntmThongke = new JMenuItem("Thống kê thuốc");
-		mnThuoc.add(mntmThongke);
+		mntmThongkeThuoc = new JMenuItem("Thống kê thuốc");
+		mnThuoc.add(mntmThongkeThuoc);
 		
 		mnHoaDon = new JMenu("Hóa đơn");
 		menuBar.add(mnHoaDon);
@@ -210,6 +207,13 @@ public class Admin extends JFrame  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				renderMain(doanhThuGui.getContenpain(), "doanh thu");
+			}
+		});
+		mntmThongkeThuoc.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderMain(thongKeThuocGui.getContenpain(), "Thong ke thuoc");
 			}
 		});
 		

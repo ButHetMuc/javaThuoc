@@ -20,7 +20,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.swing.BoxLayout;
@@ -356,7 +358,7 @@ public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseList
 		modelDsThuoc.setRowCount(0);
 		for (Thuoc th : dsThuocs) {
 			Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getLoaiThuoc().getTenLoai(), th.getNgaySanXuat(),
-					th.getNgayHetHan(), th.getNhaCungCap().getTenNhaCungCap(), th.getDonGia(), th.getSoLuong() };
+					th.getNgayHetHan(), th.getNhaCungCap().getTenNhaCungCap(), formatNumberForMoney(th.getDonGia()), th.getSoLuong() };
 			modelDsThuoc.addRow(row);
 		}
 	}
@@ -641,6 +643,23 @@ public class QuanLiThuoc_gui extends JFrame implements ActionListener, MouseList
 			renderDataTimKiem();
 		}
 		
+	}
+	private String formatNumberForMoney(double money) {
+		Locale localeVN = new Locale("vi", "VN");
+		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+	    String str1 = currencyVN.format(Math.round(money));
+	    str1 = str1.substring(0,str1.length() - 2);
+	    return str1 + " VND";
+	}
+	
+	private double formatMoneyToDouble(String str) {
+		String[] s = str.split("[. VND]");
+		String tmp = "";
+		
+		for (String string : s) {
+			tmp += string;
+		}
+		return Double.parseDouble(tmp);
 	}
 
 }

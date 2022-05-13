@@ -15,7 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 import connectdb.ConnectDB;
 import dao.DoanhThu_dao;
+import dao.HoaDon_dao;
 import dao.KhachHang_dao;
+import dao.Thuoc_dao;
+import entity.HoaDon;
 //import org.jdesktop.swingx.prompt.PromptSupport;
 //
 //import dao.KhachHangDAO;
@@ -23,6 +26,7 @@ import dao.KhachHang_dao;
 import entity.KhachHang;
 import entity.NhanVien;
 //import util.Placeholder;
+import entity.Thuoc;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -70,7 +74,7 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 	private JPanel contentPane;
 	private JPanel out;
 	private DefaultTableModel model;
-	String[] colsHD = { "Mã thuốc", "Tên thuốc","Số lượng","Tổng tiền"};
+	String[] colsHD = { "Mã thuốc", "Tên thuốc","Số lượng","Tổng tiền","Hạn sử dụng"};
 	private JButton btnThuocBanChay;
 	
 	private DefaultComboBoxModel<String> modelLoaiThongKe;
@@ -89,6 +93,8 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 	private JLabel lblModeValue;
 	private JLabel lblSum;
 	private JLabel lblSumValue;
+	
+	private ArrayList<HoaDon> dshd;
 	
 
 	/**
@@ -134,7 +140,7 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 		
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel title = new JLabel("QUẢN LÝ DOANH THU");
+		JLabel title = new JLabel("Thống kê thuốc");
 		title.setFont(new Font("Tahoma", Font.BOLD, 20));
 		top.add(title);
 		out.add(top);
@@ -199,24 +205,22 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 		pnChucNang.setLayout(new GridLayout(0, 1, 0, 5));
 		
 		btnThuocBanChay = new JButton("Thống kê thuốc  bán chạy");
+		btnThuocBanChay.setPreferredSize(new Dimension(200, 23));
 		btnThuocBanChay.setBackground(Color.WHITE);
 		btnThuocBanChay.setIcon(new ImageIcon("data\\images\\repairing-service.png"));
 //		btnThongKe.setIconTextGap(30);
 		pnChucNang.add(btnThuocBanChay);
 		
-		JPanel pnChucNang_1 = new JPanel();
-		pnThongTinThongKe.add(pnChucNang_1);
-		pnChucNang_1.setLayout(new GridLayout(0, 1, 0, 5));
+		Component verticalStrut_1 = Box.createVerticalStrut(20);
+		pnChucNang.add(verticalStrut_1);
 		
-		JButton btnThuocGanHetHan = new JButton("Thống kê thuốc gần hết hạn");
-		btnThuocGanHetHan.setBackground(Color.WHITE);
-		pnChucNang_1.add(btnThuocGanHetHan);
 		
 		JPanel pnChucNang_2 = new JPanel();
 		pnThongTinThongKe.add(pnChucNang_2);
 		pnChucNang_2.setLayout(new GridLayout(0, 1, 0, 5));
 		
-		JButton btnThuocHetHan = new JButton("Thống kê thuốc hết hạn");
+		btnThuocHetHan = new JButton("Thống kê thuốc hết hạn");
+		btnThuocHetHan.setPreferredSize(new Dimension(200, 23));
 		btnThuocHetHan.setBackground(Color.WHITE);
 		pnChucNang_2.add(btnThuocHetHan);
 		
@@ -270,8 +274,9 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 		pn_3.add(lblMod);
 		pn_3.add(lblModeValue);
 		btnThuocBanChay.addActionListener(this);
+		btnThuocHetHan.addActionListener(this);
 		// load data from database
-		loadAllData();
+//		loadAllData();
 //		renderCbbNgay();
 	}
 	
@@ -370,17 +375,16 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 		NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
 	    String str1 = currencyVN.format(Math.round(money));
 	    str1 = str1.substring(0,str1.length() - 2);
-	    return str1 + " đồng";
+	    return str1 + " VND";
 	}
 	
 	private double formatMoneyToDouble(String str) {
-		String[] s = str.split("[. đồng]");
+		String[] s = str.split("[. VND]");
 		String tmp = "";
 		
 		for (String string : s) {
 			tmp += string;
 		}
-		
 		return Double.parseDouble(tmp);
 	}
 	
@@ -473,11 +477,46 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 	public JPanel getContenpain() {
 		return this.out;
 	}
+	
+	HoaDon_dao hoaDonDao = new HoaDon_dao();
+
+	private JButton btnThuocHetHan;
+	private ArrayList<Thuoc> dst;
+	Thuoc_dao thuocDao = new Thuoc_dao();
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if(o.equals(btnThuocBanChay)) {
+			dshd = new ArrayList<HoaDon>();
+			dshd = hoaDonDao.thuocBanChay();
+			renderData();
+			
+		}
+		if(o.equals(btnThuocHetHan)) {
+			dst = new ArrayList<Thuoc>();
+			dst = thuocDao.thuocHetHan();
+			model.setRowCount(0);
+			for(Thuoc th: dst) {
+				Object[] row = {th.getMaThuoc(),th.getTenThuoc(),th.getSoLuong(),"",th.getNgayHetHan()};
+				model.addRow(row);
+			}
+			lblSumValue.setText("0 vnd");
+			lblModeValue.setText("");
+		}
 		
+	}
+
+	private void renderData() {
+		model.setRowCount(0);
+		double sum = 0;
+		for(HoaDon hd: dshd) {
+			Object[] row = {hd.getMaThuoc(),hd.getTenThuoc(),hd.getSoLuong(),hd.getTongTien(),hd.getHsd()};
+			sum += hd.getTongTien();
+			model.addRow(row);
+		}
+		lblSumValue.setText(formatNumberForMoney(sum));
+		lblModeValue.setText(dshd.get(0).getTenThuoc());
 	}
 
 	@Override

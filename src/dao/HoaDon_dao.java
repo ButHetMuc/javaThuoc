@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -292,6 +293,29 @@ public class HoaDon_dao extends ConnectDB{
 	        } 
 		}
 		return dshd;
+	}
+	
+	public ArrayList<HoaDon> thuocBanChay(){
+		Connection con = ConnectDB.getConnection();
+		ArrayList<HoaDon> dshd = new ArrayList<HoaDon>();
+		String sql = " select top 5 a.maThuoc,sum(a.soLuong) as soLuong ,sum(b.tongTien) as tongTien,c.tenThuoc,c.hanSuDung from ChiTietHoaDon a join HoaDon b on a.maHoaDon = b.maHoaDon "
+				+ "	join Thuoc c on a.maThuoc = c.maThuoc "
+				+ "	group by a.maThuoc, c.tenThuoc,c.hanSuDung "
+				+ "	order by soLuong DESC";
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				HoaDon hoadon = new HoaDon(rs.getInt("maThuoc"),rs.getString("tenThuoc"),rs.getInt("soLuong"),rs.getDouble("tongTien"),rs.getString("hanSuDung"));
+				dshd.add(hoadon);
+			}
+			return dshd;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return dshd;
+		
 	}
 	
 	

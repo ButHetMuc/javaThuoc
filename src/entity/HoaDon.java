@@ -18,6 +18,7 @@ public class HoaDon {
 	private Date ngayLap;
 	private double tongTien;
 	
+	
 	public NhanVien nhanVien;
 	public KhachHang khachHang;
 	public ArrayList<ChiTietHoaDon> chiTietHoaDons = new ArrayList<ChiTietHoaDon>();
@@ -71,6 +72,51 @@ public class HoaDon {
 		
 	}
 	
+	private int maThuoc;
+	private String tenThuoc;
+	private int soLuong;
+	
+	public int getMaThuoc() {
+		return maThuoc;
+	}
+
+	public void setMaThuoc(int maThuoc) {
+		this.maThuoc = maThuoc;
+	}
+
+	public String getTenThuoc() {
+		return tenThuoc;
+	}
+
+	public void setTenThuoc(String tenThuoc) {
+		this.tenThuoc = tenThuoc;
+	}
+
+	public int getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(int soLuong) {
+		this.soLuong = soLuong;
+	}
+
+	private String hsd;
+	public HoaDon(int maThuoc, String tenThuoc, int soLuong, double tongTien,String hanSuDung) {
+		this.maThuoc = maThuoc;
+		this.tenThuoc = tenThuoc;
+		this.soLuong = soLuong;
+		this.tongTien = tongTien;
+		this.hsd = hanSuDung;
+	}
+
+	public String getHsd() {
+		return hsd;
+	}
+
+	public void setHsd(String hsd) {
+		this.hsd = hsd;
+	}
+
 	public int getMaHD() {
 		return maHD;
 	}
