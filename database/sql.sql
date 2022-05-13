@@ -95,14 +95,14 @@ go
 go
 -- add constraint
 go
-	ALTER TABLE HoaDon ADD CONSTRAINT FKHoaDon622519 FOREIGN KEY (maKhachHang) REFERENCES KhachHang (maKhachHang);
-	ALTER TABLE HoaDon ADD CONSTRAINT FKHoaDon622518 FOREIGN KEY (maNhanVien) REFERENCES NhanVien (maNhanVien);
-	ALTER TABLE ChiTietHoaDon ADD CONSTRAINT FKCTHD622519 FOREIGN KEY (maHoaDon) REFERENCES HoaDon(maHoaDon);
-	ALTER TABLE ChiTietHoaDon ADD CONSTRAINT FKCTHD622518 FOREIGN KEY (maThuoc) REFERENCES Thuoc(maThuoc);
-	ALTER TABLE NhanVien ADD CONSTRAINT FKNhanVien622519 FOREIGN KEY (maCaLam) REFERENCES CaLam(maCaLam);
-	ALTER TABLE NhanVien ADD CONSTRAINT FKNhanVien622518 FOREIGN KEY (tenTaiKhoan) REFERENCES TaiKhoan(tenTaiKhoan);
-	ALTER TABLE Thuoc ADD CONSTRAINT FKThuoc6225181 FOREIGN KEY (maNhaCungCap) REFERENCES NhaCungCap(maNhaCungCap);
-	ALTER TABLE Thuoc ADD CONSTRAINT FKThuoc6225191 FOREIGN KEY (maLoaiThuoc) REFERENCES LoaiThuoc(maLoaiThuoc);
+	ALTER TABLE HoaDon ADD CONSTRAINT FKHoaDon622519 FOREIGN KEY (maKhachHang) REFERENCES KhachHang (maKhachHang) ON DELETE CASCADE ;
+	ALTER TABLE HoaDon ADD CONSTRAINT FKHoaDon622518 FOREIGN KEY (maNhanVien) REFERENCES NhanVien (maNhanVien) ON DELETE CASCADE ;
+	ALTER TABLE ChiTietHoaDon ADD CONSTRAINT FKCTHD622519 FOREIGN KEY (maHoaDon) REFERENCES HoaDon(maHoaDon) ON DELETE CASCADE ;
+	ALTER TABLE ChiTietHoaDon ADD CONSTRAINT FKCTHD622518 FOREIGN KEY (maThuoc) REFERENCES Thuoc(maThuoc) ON DELETE CASCADE ;
+	ALTER TABLE NhanVien ADD CONSTRAINT FKNhanVien622519 FOREIGN KEY (maCaLam) REFERENCES CaLam(maCaLam) ON DELETE CASCADE ;
+	ALTER TABLE NhanVien ADD CONSTRAINT FKNhanVien622518 FOREIGN KEY (tenTaiKhoan) REFERENCES TaiKhoan(tenTaiKhoan) ON DELETE CASCADE ;
+	ALTER TABLE Thuoc ADD CONSTRAINT FKThuoc6225181 FOREIGN KEY (maNhaCungCap) REFERENCES NhaCungCap(maNhaCungCap) ON DELETE CASCADE ;
+	ALTER TABLE Thuoc ADD CONSTRAINT FKThuoc6225191 FOREIGN KEY (maLoaiThuoc) REFERENCES LoaiThuoc(maLoaiThuoc) ON DELETE CASCADE ;
 go
 
 -- insert khach hang
@@ -199,16 +199,25 @@ go
 	insert into HoaDon values(3,3,400000,'29/3/2020')
 	insert into HoaDon values(4,1,500000,'29/4/2020')
 
+	select * from HoaDon
+
 	go
 
-	insert into ChiTietHoaDon values(1,1,10,200000)
-	insert into ChiTietHoaDon values(1,2,10,300000)
-	insert into ChiTietHoaDon values(1,3,10,400000)
-	insert into ChiTietHoaDon values(1,4,10,500000)
-	insert into ChiTietHoaDon values(1,5,10,600000)
+	insert into ChiTietHoaDon values(5,1,10,200000)
+	insert into ChiTietHoaDon values(5,2,10,300000)
+	insert into ChiTietHoaDon values(5,3,10,400000)
+	insert into ChiTietHoaDon values(5,4,10,500000)
+	insert into ChiTietHoaDon values(5,5,10,600000)
 
-	insert into ChiTietHoaDon values(2,1,10,200000)
-	insert into ChiTietHoaDon values(2,2,10,300000)
-	insert into ChiTietHoaDon values(2,3,10,400000)
-	insert into ChiTietHoaDon values(2,4,10,500000)
-	insert into ChiTietHoaDon values(2,5,10,600000)
+	insert into ChiTietHoaDon values(6,1,10,200000)
+	insert into ChiTietHoaDon values(6,2,10,300000)
+	insert into ChiTietHoaDon values(6,3,10,400000)
+	insert into ChiTietHoaDon values(6,4,10,500000)
+	insert into ChiTietHoaDon values(6,5,10,600000)
+
+
+	select top 5 a.maThuoc,sum(a.soLuong) as soLuong ,sum(b.tongTien) as tongTien,c.tenThuoc 
+	from ChiTietHoaDon a join HoaDon b on a.maHoaDon = b.maHoaDon 
+	join Thuoc c on a.maThuoc = c.maThuoc  
+	group by a.maThuoc, c.tenThuoc
+	order by soLuong desc

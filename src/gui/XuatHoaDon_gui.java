@@ -215,7 +215,6 @@ public class XuatHoaDon_gui extends JFrame implements Printable{
 		btnInHoaDon.addActionListener(e -> {
 			pnFoot.remove(btnInHoaDon);
 			printFrame();
-			JOptionPane.showMessageDialog(contentPane, "Đã hoàn tất tác vụ");
 			pnFoot.add(btnInHoaDon);
 			pnFoot.revalidate();
 			pnFoot.repaint();
@@ -233,15 +232,12 @@ public class XuatHoaDon_gui extends JFrame implements Printable{
 		modelDSSP.getDataVector().removeAllElements();
 		
 		
-		System.out.println("cthd :" + hd.getChiTietHoaDons().size());
-		
-		
 		hd.getChiTietHoaDons().forEach(cthd -> {
 			modelDSSP.addRow(new Object[] {
 				cthd.getThuoc().getTenThuoc(),
-				cthd.getThuoc().getDonGia(),
+				formatNumberForMoney(cthd.getThuoc().getDonGia()),
 				cthd.getSoLuong(),
-				cthd.getSoLuong()*cthd.getDonGia()
+				formatNumberForMoney(cthd.getThuoc().getDonGia() * cthd.getSoLuong())
 			});
 			tongTien += cthd.getThuoc().getDonGia() * cthd.getSoLuong();
 		});

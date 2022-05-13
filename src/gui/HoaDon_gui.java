@@ -47,9 +47,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 	
 	private JTextField txtTongTien;
 	private JTextField txtDiaChi;
-	private JButton btnXoa;
 	private JComboBox cboTimKiem;
-	private DefaultTableModel modelDSThuoc;
 	private JTable tblDSThuoc;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -140,14 +138,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 		pn.add(txtTongTien);
 		
 		
-
-		btnXoa = new JButton("Xóa");
-		btnXoa.setBounds(10, 160, 154, 35);
-		pn.add(btnXoa);
-		btnXoa.setIcon(new ImageIcon("data/images/cancel_16.png"));
-		btnXoa.setBackground(Color.WHITE);
-		
-		btnXuatHoaDon = new JButton("Xuất hóa đơn");
+		btnXuatHoaDon = new JButton("Xem chi tiết");
 		btnXuatHoaDon.setBackground(Color.WHITE);
 		btnXuatHoaDon.setBounds(174, 160, 154, 35);
 		pn.add(btnXuatHoaDon);
@@ -201,7 +192,6 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 		txtTimKiem.setColumns(10);
 		
 		
-		btnXoa.addActionListener(this);
 		btnXuatHoaDon.addActionListener(this);
 		tableHD.addMouseListener(this);
 		txtTimKiem.addKeyListener(this);
@@ -259,9 +249,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 	
 	public void clear() {
 		tableHD.clearSelection();
-		modelDSThuoc.getDataVector().removeAllElements();
-		tblDSThuoc.revalidate();
-		tblDSThuoc.repaint();
+//		modelHD.setRowCount(0);
 		
 		txtMaHD.setText("");
 		txtTenKH.setText("");
@@ -278,45 +266,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
-	
-		if(o.equals(btnXoa)) {
-			int idx = tableHD.getSelectedRow();
-			if(idx == -1) {
-				JOptionPane.showMessageDialog(pnMain, "Vui lòng chọn hóa đơn để xóa");
-				return;
-			}
-			int choose = JOptionPane.showConfirmDialog(pnMain, "Chắc chắn xóa ?");
-			if(choose == 0) {
-				try {
-					if(new HoaDon_dao().xoaHD(dshd.get(idx).getMaHD())) {
-						JOptionPane.showMessageDialog(pnMain, "Xóa thành công");
-						clear();
-						
-						if(isTimKiem) {
-							String key = "maHoaDon";
-							if(cboTimKiem.getSelectedIndex() == 1) {
-								key = "KhachHang.maKhachHang";
-							}else if(cboTimKiem.getSelectedIndex() == 2) {
-								key = "KhachHang.TenKhachHang";
-							}else if(cboTimKiem.getSelectedIndex() == 3) {
-								key = "KhachHang.soDienThoai";
-							}
-							
-							dshd = (ArrayList<HoaDon>) new HoaDon_dao().timKiem(key, txtTimKiem.getText());
-							renderDataTimKiem();
-						}else 
-							renderData();
-					}else {
-						JOptionPane.showMessageDialog(pnMain, "Xóa thất bại");
-					}
-				} catch (HeadlessException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			
-		}
-		
+
 		if(o.equals(btnXuatHoaDon)) {
 			int idx = tableHD.getSelectedRow();
 			if(idx == -1) {
@@ -357,6 +307,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 		// TODO Auto-generated method stub
 		int row = tableHD.getSelectedRow();
 		if(row == -1) {
+			setEnabled(false);
 			return;
 		}
 		
@@ -380,6 +331,7 @@ public class HoaDon_gui extends JFrame implements ActionListener, MouseListener,
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
+		
 		
 	}
 	@Override

@@ -143,4 +143,22 @@ public class KhachHang_dao extends ConnectDB{
 		}
 		return n> 0;
 	}
+	public KhachHang findKhBySdt(String sdt) {
+		// TODO Auto-generated method stub
+		try {
+			PreparedStatement ps = this.con.prepareStatement("select * from KhachHang where soDienThoai = ?");
+			ps.setString(1, sdt);
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				return new KhachHang(rs.getInt("maKhachHang"), rs.getString("tenKhachHang"),rs.getString("soDienThoai"));				
+			}
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }

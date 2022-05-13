@@ -34,6 +34,8 @@ public class ChiTietHoaDon {
 		super();
 		this.thuoc = thuoc;
 		this.soLuong = soLuong;
+		this.donGia = thuoc.getDonGia();
+		
 	}
 
 

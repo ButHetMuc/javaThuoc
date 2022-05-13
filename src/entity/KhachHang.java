@@ -42,6 +42,7 @@ public class KhachHang {
 	
 	public KhachHang(String tenKhachHang, String soDienThoai) {
 		super();
+		this.maKhachHang = 0;
 		this.tenKhachHang = tenKhachHang;
 		this.soDienThoai = soDienThoai;
 	}
