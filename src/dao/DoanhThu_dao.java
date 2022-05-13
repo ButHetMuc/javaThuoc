@@ -59,7 +59,7 @@ public class DoanhThu_dao {
 		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(""
-					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, COUNT(a.soluong) as SoLuong "
+					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, Sum(a.soluong) as SoLuong "
 					+ "FROM HoaDon "
 					+ "JOIN ChiTietHoaDon as a ON HoaDon.maHoaDon = a.maHoaDon "
 					+ "		join Thuoc on Thuoc.maThuoc = a.maThuoc "
@@ -84,7 +84,7 @@ public class DoanhThu_dao {
 		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(""
-					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, COUNT(a.soluong) as SoLuong "
+					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, Sum(a.soluong) as SoLuong "
 					+ "FROM HoaDon "
 					+ "JOIN ChiTietHoaDon as a ON HoaDon.maHoaDon = a.maHoaDon "
 					+ "		join Thuoc on Thuoc.maThuoc = a.maThuoc "
@@ -108,7 +108,7 @@ public class DoanhThu_dao {
 		Connection con = ConnectDB.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(""
-					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, COUNT(a.soluong) as SoLuong "
+					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, Sum(a.soluong) as SoLuong "
 					+ "FROM HoaDon "
 					+ "JOIN ChiTietHoaDon as a ON HoaDon.maHoaDon = a.maHoaDon "
 					+ "		join Thuoc on Thuoc.maThuoc = a.maThuoc "
@@ -135,7 +135,7 @@ public class DoanhThu_dao {
 		int monthStart = monthEnd - 2;
 		try {
 			PreparedStatement ps = con.prepareStatement(""
-					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, COUNT(a.soluong) as SoLuong "
+					+ "SELECT Thuoc.maThuoc, Thuoc.tenThuoc, Sum(tongTien) as TongTien, Sum(a.soluong) as SoLuong "
 					+ "FROM HoaDon "
 					+ "JOIN ChiTietHoaDon as a ON HoaDon.maHoaDon = a.maHoaDon "
 					+ "		join Thuoc on Thuoc.maThuoc = a.maThuoc "

@@ -46,8 +46,6 @@ public class Admin extends JFrame  {
 	private NhanVien_gui nhanVienGui = new NhanVien_gui();
 	private QuanLiThuoc_gui quanLiThuocGui = new QuanLiThuoc_gui();
 	private TaoHoaDon_gui taoHoaDonGui = new TaoHoaDon_gui();
-	private TimKiemHoaDon_gui timKiemHoaDonGui = new TimKiemHoaDon_gui();
-	private TimKiemThuoc timKiemThuocGui = new TimKiemThuoc();
 	private TrangChu_gui trangChuGui = new TrangChu_gui();
 	private ThongKeThuoc_gui thongKeThuocGui = new ThongKeThuoc_gui();
 	private JMenuItem mntmThemHoaDon;
@@ -116,9 +114,6 @@ public class Admin extends JFrame  {
 		
 		mntmThemHoaDon = new JMenuItem("Thêm hóa đơn");
 		mnHoaDon.add(mntmThemHoaDon);
-		
-		mntmTimKiemHD = new JMenuItem("Tìm kiếm hóa đơn");
-		mnHoaDon.add(mntmTimKiemHD);
 		
 		mnKhachHang = new JMenu("Khách hàng");
 		menuBar.add(mnKhachHang);
@@ -193,13 +188,6 @@ public class Admin extends JFrame  {
 				renderMain(taoHoaDonGui.getContentPane(), "tao hoa don");
 			}
 		});
-		mntmTimKiemHD.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					renderMain(timKiemHoaDonGui.getContentPane(), "tim hoa don");
-				}
-			});
 			
 
 		mntmDoanhThu.addActionListener(new ActionListener() {

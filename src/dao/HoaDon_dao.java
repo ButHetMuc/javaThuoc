@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import connectdb.ConnectDB;
@@ -32,42 +33,29 @@ public class HoaDon_dao extends ConnectDB{
 	
 	public boolean themHoaDon(HoaDon hd) throws SQLException {
 		PreparedStatement stmt = null;
+		boolean flag = true;
         try {
         	ArrayList<ChiTietHoaDon> dscthd = hd.getChiTietHoaDons();
-		
-//        	kiểm tra số lượng thuốc
-		for(int i=0; i<dscthd.size(); i++) {
-			if(dscthd.get(i).getThuoc().getSoLuong() < dscthd.get(i).getSoLuong()) {
-				this.error = "Lỗi: "+ dscthd.get(i).getThuoc().getTenThuoc() + " chỉ còn " + dscthd.get(i).getThuoc().getSoLuong() + "thuốc";
-				return false;
-			}
-		}
-		AtomicBoolean flag = new AtomicBoolean();
-		flag.set(true);
-//        	cập nhật số lượng thuốc
-		dscthd.forEach(cthd -> {
-			Thuoc thuoc = cthd.getThuoc();
-			thuoc.setSoLuong(thuoc.getSoLuong()-cthd.getSoLuong());
-			if(new Thuoc_dao().updateThuoc(thuoc) == false) {
-				flag.set(false);
-			}
-		});
-		
-		if(flag.get() == false) {
-			this.error = "Có lỗi xảy ra";
-			return false;
-		}
-		
+        	
+        // thêm khách hàng trước
+        KhachHang kh = hd.getKhachHang();
+        if(kh.getMaKhachHang() == 0) {
+        	// khách hàng mới
+        	boolean isSuccess = new KhachHang_dao().create(kh);
+        	if(isSuccess) {
+        		int maKH = new KhachHang_dao().findKhBySdt(kh.getSoDienThoai()).getMaKhachHang();
+        		kh.setMaKhachHang(maKH);
+        	}else {
+        		return false;
+        	}	
+        }
+        
+        
 //    	thêm hóa đơn
         String sql = "INSERT INTO dbo.HoaDon (maNhanVien, maKhachHang, tongTien) values(?, ?, ?)";
         stmt = this.con.prepareStatement(sql);
         stmt.setInt(1, hd.getNhanVien().getMaNhanVien());
-        
-        if(hd.getKhachHang() != null)
-        	stmt.setInt(2, hd.getKhachHang().getMaKhachHang());
-        else
-        	stmt.setNull(2, java.sql.Types.INTEGER);
-        
+        stmt.setInt(2, kh.getMaKhachHang());
         stmt.setDouble(3, hd.getTongTien());
         
         int n = stmt.executeUpdate();
@@ -77,27 +65,20 @@ public class HoaDon_dao extends ConnectDB{
     	}
         
 //        thêm chi tiết hóa đơn
-    	dscthd.forEach(cthd -> {
-    		try {
-    			boolean flag2 = new ChiTietHoaDon_dao().themChiTietHoaDon(cthd, getLastestMaHD());
-    			if(flag2 == false) {
-    				this.error =  "Có lỗi xảy ra";
-    			}
-				flag.set(flag2);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	});
-        
-        return flag.get();
-        
+        for(ChiTietHoaDon cthd: dscthd) {
+        	flag = new ChiTietHoaDon_dao().themChiTietHoaDon(cthd, getLastestMaHD());
+        	flag = new Thuoc_dao().minusThuoc(cthd.getThuoc().getMaThuoc(), cthd.getSoLuong());
+        	if(!flag) {
+        		break;
+        	}
+        }
+    
     } catch (SQLException e) {
         e.printStackTrace();
     } finally {
     	
     }
-	return false;
+	return flag;
 }
 
 	
@@ -233,25 +214,22 @@ public class HoaDon_dao extends ConnectDB{
 	
 	public boolean xoaHD(int maHD) {
 		PreparedStatement stmt = null;
+		int n = 0;
 
         try {
-        	if(new ChiTietHoaDon_dao().xoaHetChiTietHD(maHD) == false) {
-        		return false;
-        	}
         	
         	String sql = "DELETE from dbo.HoaDon WHERE maHoaDon = ?";
         	PreparedStatement prpStmt = this.con.prepareStatement(sql);
         	
-        	prpStmt.setDouble(1, maHD);
-            int n = prpStmt.executeUpdate();
+        	prpStmt.setInt(1, maHD);
+            n = prpStmt.executeUpdate();
                
-            return n > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
         }
     	
-    	return false;
+    	return n>0;
 	}
 	
 	public String getError() {

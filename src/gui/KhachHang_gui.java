@@ -311,6 +311,7 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 			String cTen = String.valueOf(arrTen[i]);
 			if(cTen.matches("[0-9]"))
 				return true;
+			
 		}
 		return false;
 	}
@@ -365,12 +366,12 @@ public class KhachHang_gui extends JFrame implements ActionListener, MouseListen
 		String ten = txtTenKh.getText().trim();
 		String sdt = txtSdt.getText().trim();
 		
-		if(!ten.matches("([A-Z][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)((\\s{1}[A-Z][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)*)")) {
+		if(!ten.matches("([A-VXYỲỌÁẦẢẤỜỄÀẠẰỆẾÝỘẬỐŨỨĨÕÚỮỊỖÌỀỂẨỚẶÒÙỒỢÃỤỦÍỸẮẪỰỈỎỪỶỞÓÉỬỴẲẸÈẼỔẴẺỠƠÔƯĂÊÂĐ][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)((\\s{1}[A-VXYỲỌÁẦẢẤỜỄÀẠẰỆẾÝỘẬỐŨỨĨÕÚỮỊỖÌỀỂẨỚẶÒÙỒỢÃỤỦÍỸẮẪỰỈỎỪỶỞÓÉỬỴẲẸÈẼỔẴẺỠƠÔƯĂÊÂĐ][a-vxyỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ]+)*)")) {
 			JOptionPane.showMessageDialog(null, "Tên khách hàng không hợp lệ!");
 			txtTenKh.selectAll();
 			txtTenKh.requestFocus();
 			return false;
-		}else if(!sdt.matches("0[1-9]{9}")) {
+		}else if(!sdt.matches("0[1-9][0-9]{8}")) {
 			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
 			txtSdt.selectAll();
 			txtSdt.requestFocus();

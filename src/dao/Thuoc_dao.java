@@ -161,6 +161,7 @@ public class Thuoc_dao  {
 		
 	}
 
+
 	public ArrayList<Thuoc> thuocHetHan() {
 		dst = new ArrayList<Thuoc>();
 		Connection con = ConnectDB.getConnection();
@@ -179,5 +180,22 @@ public class Thuoc_dao  {
 			e.printStackTrace();
 		}
 		return dst;
+	}
+
+	public boolean minusThuoc(int maThuoc, int minusValue) {
+		int n = 0;
+		PreparedStatement ps;
+		try {
+			ps = ConnectDB.getConnection().prepareStatement("update thuoc set soLuong = soLuong - ? where maThuoc = ?");
+			ps.setInt(1, minusValue);
+			ps.setInt(2, maThuoc);
+			
+			n = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return n > 0;
 	}
 }
