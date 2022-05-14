@@ -511,7 +511,7 @@ public class ThongKeThuoc_gui extends JFrame implements ActionListener, MouseLis
 		model.setRowCount(0);
 		double sum = 0;
 		for(HoaDon hd: dshd) {
-			Object[] row = {hd.getMaThuoc(),hd.getTenThuoc(),hd.getSoLuong(),hd.getTongTien(),hd.getHsd()};
+			Object[] row = {hd.getMaThuoc(),hd.getTenThuoc(),hd.getSoLuong(),formatNumberForMoney(hd.getTongTien()),hd.getHsd()};
 			sum += hd.getTongTien();
 			model.addRow(row);
 		}
